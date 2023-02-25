@@ -8,6 +8,7 @@ using namespace std;
 void asignaciones_constantes_fechas();
 void generacion_idOrden();
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -35,6 +36,15 @@ void MainWindow::on_PB_CrearOrden_clicked()
     QString codigoPostal = ui->LE_CodigoPostal->text();
     QString pais = ui->LE_Pais->text();
     connectPSQL();
+    QString query_texto = "INSERT INTO public.orders ( \"OrderID\", \"CustomerID\", \"EmployeeID\", \"OrderDate\", \"RequiredDate\", \"ShippedDate\", \"ShipVia\", \"Freight\", \"ShipName\", \"ShipAddress\", \"ShipCity\", \"ShipRegion\", \"ShipPostalCode\", \"ShipCountry\")";
+    query_texto += "VALUES (11078, \'"+idCliente+"\', "+idEmpleado+", \'2023-02-25\', \'2023-02-28\', NULL, "+idAgencia+", "+peso+", \'"+nombreBarco+"\', \'"+direccionEnvio+"\', \'"+ciudad+"\', "+region+", \'"+codigoPostal+"\', \'"+pais+"\')";
+    QSqlQuery query_array;
+    if(query_array.exec(query_texto)){
+        QMessageBox::information(this, "INFO ORDEN", "Orden procesada exitosamente");
+    }
+    else{
+        QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+    }
     //Limpia los campos de los Line Edits
     ui->LE_IDCliente->clear();
     ui->LE_IDEmpleado->clear();
@@ -51,7 +61,18 @@ void MainWindow::on_PB_CrearOrden_clicked()
 
 int MainWindow::connectPSQL()
 {
+    database = QSqlDatabase::addDatabase("QPSQL");
+    database.setHostName(HOST_NAME);
+    database.setUserName(USER_NAME);
+    database.setPassword(PASSWORD);
+    database.setDatabaseName(DATABASE_NAME);
 
+    if(database.open()){
+        QMessageBox::information(this, "CONEXION A POSTGRESQL", "Conexion establecida correctamente");
+    }
+    else{
+         QMessageBox::information(this, "CONEXION A POSTGRESQL", "No se ha establecido conexion");
+    }
     return 0;
 }
 
