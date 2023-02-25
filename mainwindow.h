@@ -15,8 +15,8 @@
 #include <QSqlQuery>
 
 #define HOST_NAME "localhost"
-#define USER_NAME "qt"
-#define PASSWORD "54321"
+#define USER_NAME "postgres"
+#define PASSWORD "12345"
 #define DATABASE_NAME "Northwind"
 
 QT_BEGIN_NAMESPACE
