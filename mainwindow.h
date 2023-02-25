@@ -11,6 +11,13 @@
 #include <QMessageBox>
 #include <iostream>
 #include <vector>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+
+#define HOST_NAME "localhost"
+#define USER_NAME "qt"
+#define PASSWORD "54321"
+#define DATABASE_NAME "Northwind"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,6 +36,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QSqlDatabase database;
 
     int connectPSQL();
 };
