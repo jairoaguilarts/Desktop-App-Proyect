@@ -76,6 +76,8 @@ void MainWindow::on_PB_CrearOrden_clicked()
         QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
         qDebug() << "Error: " << query.lastError().text();
     } else {
+        orderID_flag = ordenID;
+
         //Limpia los campos de los Line Edits
         ui->LE_IDCliente->clear();
         ui->LE_IDEmpleado->clear();
@@ -106,22 +108,27 @@ void MainWindow::on_PB_agregardetalles_clicked()
     //Obtiene los datos de los Line Edits
     QString idProducto = ui->LE_producto->text();
     QString precio = ui->LE_precio->text();
+    QString cantidad = ui->LE_cantidad->text();
     QString descuento = ui->LE_descuento->text();
 
-    QString query_texto = "INSERT INTO public.ordersdetails ( \"Idproductos\", \"Price\", \"discount\")";
-    query_texto += "VALUES ("+idProducto+"\', "+precio+"\', "+precio+", "+descuento+"\')";
-    QSqlQuery query_array;
-    if(query_array.exec(query_texto)){
-        QMessageBox::information(this, "INFO ORDEN", "Orden procesada exitosamente");
+    //Inserta los datos a order_details
+    QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
+    QSqlQuery query;
+    query.bindValue(":orderID", orderID_flag);
+    query.bindValue(":productID", idProducto.toInt());
+    query.bindValue(":unitPrice", precio.toDouble());
+    query.bindValue(":quantity", cantidad.toInt());
+    query.bindValue(":discount", descuento.toDouble());
+    if(!query.exec()){
+        QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+        qDebug() << "Error: " << query.lastError().text();
     }
     else{
-        QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+        //Limpia los campos de los Line Edits
+        ui->LE_producto->clear();
+        ui->LE_precio->clear();
+        ui->LE_descuento->clear();
     }
-
-    //Limpia los campos de los Line Edits
-    ui->LE_producto->clear();
-    ui->LE_precio->clear();
-    ui->LE_descuento->clear();
 }
 
 

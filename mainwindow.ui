@@ -195,7 +195,7 @@
        <x>20</x>
        <y>60</y>
        <width>111</width>
-       <height>111</height>
+       <height>131</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -214,6 +214,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Cantidad</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_14">
         <property name="text">
          <string>Descuento</string>
@@ -228,7 +235,7 @@
        <x>140</x>
        <y>60</y>
        <width>141</width>
-       <height>111</height>
+       <height>131</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -237,6 +244,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="LE_precio"/>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="LE_cantidad"/>
       </item>
       <item>
        <widget class="QLineEdit" name="LE_descuento"/>
@@ -323,7 +333,7 @@
      <x>0</x>
      <y>0</y>
      <width>1188</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

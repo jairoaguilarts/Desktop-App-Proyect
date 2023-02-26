@@ -46,6 +46,8 @@ private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
 
+    int orderID_flag;
+
     int generarIDOrden();
 
 };
