@@ -13,6 +13,7 @@
 #include <vector>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QRandomGenerator>
 
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
@@ -42,6 +43,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
+
+    int generarIDOrden();
 
 };
 #endif // MAINWINDOW_H

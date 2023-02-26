@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <iostream>
-#include <time.h>
 
 using namespace std;
 
@@ -40,11 +39,12 @@ MainWindow::~MainWindow()
 void MainWindow::on_PB_CrearOrden_clicked()
 {
     //Obtiene los datos de los Line Edits
+    QString ordenID = QString::number(this->generarIDOrden());
     QString idCliente = ui->LE_IDCliente->text();
     QString idEmpleado = ui->LE_IDEmpleado->text();
-    QDate fechaOrden; //Poner valores
-    QDate fechaRequerida; //Poner valores
-    QDate fechaEnviada; //Poner valores
+    QDate fechaOrden = QDate::currentDate();
+    QDate fechaRequerida = fechaOrden.addDays(2);
+    QDate fechaEnviada; //null
     QString idAgencia = ui->LE_IDAgencia->text();
     QString peso = ui->LE_Peso->text();
     QString nombreBarco = ui->LE_NombreBarco->text();
@@ -56,23 +56,22 @@ void MainWindow::on_PB_CrearOrden_clicked()
 
     //Agrega los datos a la tabla de Orders
     QSqlQuery query;
-    query.prepare("INSERT INTO orders (customer_id, employee_id, order_date, required_date, shipped_date, ship_via, freight, ship_name, ship_address, ship_city, ship_region, ship_postal_code, ship_country) "
-                      "VALUES (:customerID, :employeeID, :orderDate, :requiredDate, :shippedDate, :shipVia, :freight, :shipName, :shipAddress, :shipCity, :shipRegion, :shipPostalCode, :shipCountry)");
-    query.bindValue(":customerID", idCliente.toInt());
-    query.bindValue(":employeeID", idEmpleado.toInt());
-    query.bindValue(":orderDate", fechaOrden);
-    query.bindValue(":requiredDate", fechaRequerida);
-    query.bindValue(":shippedDate", fechaEnviada);
-    query.bindValue(":shipVia", idAgencia.toInt());
-    query.bindValue(":freight", peso.toDouble());
-    query.bindValue(":shipName", nombreBarco);
-    query.bindValue(":shipAddress", direccionEnvio);
-    query.bindValue(":shipCity", ciudad);
-    query.bindValue(":shipRegion", region);
-    query.bindValue(":shipPostalCode", codigoPostal);
-    query.bindValue(":shipCountry", pais);
-
-    if(!query.exec()){
+    if(!query.exec(QString("INSERT INTO orders (OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) "
+                               "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', '%10', '%11', '%12', '%13', '%14')")
+                .arg(ordenID)
+                .arg(idCliente)
+                .arg(idEmpleado)
+                .arg(fechaOrden.toString("yyyy-MM-dd"))
+                .arg(fechaRequerida.toString("yyyy-MM-dd"))
+                .arg(fechaEnviada.toString("yyyy-MM-dd"))
+                .arg(idAgencia)
+                .arg(peso)
+                .arg(nombreBarco)
+                .arg(direccionEnvio)
+                .arg(ciudad)
+                .arg(region)
+                .arg(codigoPostal)
+                .arg(pais))) {
         QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
     } else {
         //Limpia los campos de los Line Edits
@@ -90,34 +89,14 @@ void MainWindow::on_PB_CrearOrden_clicked()
 
 }
 
-void asignaciones_constantes_fechas(){
-    time_t tp = time(nullptr);
-    tm* fo = localtime(&tp);
-    string fecha_orden, fecha_requerida, fecha_enviada = NULL;  //Fechas requeridas del inciso b
-
-    int dia = fo->tm_mday;
-    int mes = fo->tm_mon + 1;
-    int anno = fo->tm_year + 1900;
-
-    fecha_orden = to_string(dia) + "/" + to_string(mes) + "/" + to_string(anno);
-
-    tp += 172800;
-    fo = localtime(&tp);
-    mes = fo->tm_mon + 1;
-    dia = fo->tm_mday;
-    anno = fo->tm_year + 1900;
-
-    fecha_requerida = to_string(dia) + "/" + to_string(mes) + "/" + to_string(anno);
-
-    cout << fecha_orden << endl;
-    cout << fecha_requerida;
-}
-
-void generacion_idOrden(){
-    srand(time(NULL));
-
-    int id_orden = 10000 + rand() % (100000 - 10000);       //Generacion Aleatoria del OrderID
-    cout << id_orden << endl;
+int MainWindow::generarIDOrden()
+{
+    QSqlQuery query(this->database);
+    query.prepare("SELECT MAX(OrderID) FROM Orders");
+    query.exec();
+    query.first();
+    int orderID = query.value(0).toInt();
+    return orderID + 1;
 }
 
 void MainWindow::on_PB_agregardetalles_clicked()
