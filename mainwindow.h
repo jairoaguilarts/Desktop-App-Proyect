@@ -13,8 +13,10 @@
 #include <vector>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QRandomGenerator>
 
+//Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
 #define PASSWORD "123"

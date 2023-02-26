@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    //Conexion a PSQL
     database = QSqlDatabase::addDatabase("QPSQL");
     database.setHostName(HOST_NAME);
     database.setUserName(USER_NAME);
@@ -39,7 +40,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_PB_CrearOrden_clicked()
 {
     //Obtiene los datos de los Line Edits
-    QString ordenID = QString::number(this->generarIDOrden());
+    int ordenID = this->generarIDOrden();
     QString idCliente = ui->LE_IDCliente->text();
     QString idEmpleado = ui->LE_IDEmpleado->text();
     QDate fechaOrden = QDate::currentDate();
@@ -55,24 +56,25 @@ void MainWindow::on_PB_CrearOrden_clicked()
     QString pais = ui->LE_Pais->text();
 
     //Agrega los datos a la tabla de Orders
+    QString queryString = "INSERT INTO orders (order_id, customer_id, employee_id, order_date, required_date, ship_via, freight, ship_name, ship_address, ship_city, ship_region, ship_postal_code, ship_country) VALUES (:orderID,:customerID,:employeeID,:orderDate,:requiredDate,:shipVia,:freight,:shipName,:shipAddress,:shipCity,:shipRegion,:shipPostalCode,:shipCountry)";
     QSqlQuery query;
-    if(!query.exec(QString("INSERT INTO orders (OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) "
-                               "VALUES ('%1', '%2', '%3', '%4', '%5', '%6', '%7', '%8', '%9', '%10', '%11', '%12', '%13', '%14')")
-                .arg(ordenID)
-                .arg(idCliente)
-                .arg(idEmpleado)
-                .arg(fechaOrden.toString("yyyy-MM-dd"))
-                .arg(fechaRequerida.toString("yyyy-MM-dd"))
-                .arg(fechaEnviada.toString("yyyy-MM-dd"))
-                .arg(idAgencia)
-                .arg(peso)
-                .arg(nombreBarco)
-                .arg(direccionEnvio)
-                .arg(ciudad)
-                .arg(region)
-                .arg(codigoPostal)
-                .arg(pais))) {
+    query.prepare(queryString);
+    query.bindValue(":orderID", ordenID);
+    query.bindValue(":customerID", idCliente);
+    query.bindValue(":employeeID", idEmpleado);
+    query.bindValue(":orderDate", fechaOrden.toString());
+    query.bindValue(":requiredDate", fechaRequerida.toString());
+    query.bindValue(":shipVia", idAgencia.toInt());
+    query.bindValue(":freight", peso.toDouble());
+    query.bindValue(":shipName", nombreBarco);
+    query.bindValue(":shipAddress", direccionEnvio);
+    query.bindValue("shipCity", ciudad);
+    query.bindValue(":shipRegion", region);
+    query.bindValue(":shipPostalCode", codigoPostal);
+    query.bindValue(":shipCountry", pais);
+    if(!query.exec()) {
         QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+        qDebug() << "Error: " << query.lastError().text();
     } else {
         //Limpia los campos de los Line Edits
         ui->LE_IDCliente->clear();
@@ -92,7 +94,7 @@ void MainWindow::on_PB_CrearOrden_clicked()
 int MainWindow::generarIDOrden()
 {
     QSqlQuery query(this->database);
-    query.prepare("SELECT MAX(OrderID) FROM Orders");
+    query.prepare("SELECT MAX(order_id) FROM orders");
     query.exec();
     query.first();
     int orderID = query.value(0).toInt();
