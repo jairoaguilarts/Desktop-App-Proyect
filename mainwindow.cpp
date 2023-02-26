@@ -55,7 +55,7 @@ void MainWindow::on_PB_CrearOrden_clicked()
     QString codigoPostal = ui->LE_CodigoPostal->text();
     QString pais = ui->LE_Pais->text();
 
-    //Agrega los datos a la tabla de Orders
+    //Agrega los datos a la tabla de Orders (revisen los campos de los atributos de la tabla orders en sus bases de datos)
     QString queryString = "INSERT INTO orders (order_id, customer_id, employee_id, order_date, required_date, ship_via, freight, ship_name, ship_address, ship_city, ship_region, ship_postal_code, ship_country) VALUES (:orderID,:customerID,:employeeID,:orderDate,:requiredDate,:shipVia,:freight,:shipName,:shipAddress,:shipCity,:shipRegion,:shipPostalCode,:shipCountry)";
     QSqlQuery query;
     query.prepare(queryString);
