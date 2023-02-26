@@ -16,8 +16,9 @@
 
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "12345"
+#define PASSWORD "123"
 #define DATABASE_NAME "northwind"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,6 +34,10 @@ public:
 
 private slots:
     void on_PB_CrearOrden_clicked();
+
+    void on_PB_agregardetalles_clicked();
+
+    void on_PB_Buscarproducto_clicked();
 
 private:
     Ui::MainWindow *ui;

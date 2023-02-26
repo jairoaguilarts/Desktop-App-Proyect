@@ -7,6 +7,7 @@ using namespace std;
 
 void asignaciones_constantes_fechas();
 void generacion_idOrden();
+void buscar_productos_por_nombre( QString& , QTableWidget* );
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -105,3 +106,90 @@ void generacion_idOrden(){
     int id_orden = 10000 + rand() % (100000 - 10000);       //Generacion Aleatoria del OrderID
     cout << id_orden << endl;
 }
+
+void MainWindow::on_PB_agregardetalles_clicked()
+{
+    //Obtiene los datos de los Line Edits
+            QString idProducto = ui->LE_producto->text();
+            QString precio = ui->LE_precio->text();
+            QString descuento = ui->LE_descuento->text();
+
+            QString query_texto = "INSERT INTO public.ordersdetails ( \"Idproductos\", \"Price\", \"discount\")";
+            query_texto += "VALUES ("+idProducto+"\', "+precio+"\', "+precio+", "+descuento+"\')";
+            QSqlQuery query_array;
+            if(query_array.exec(query_texto)){
+                QMessageBox::information(this, "INFO ORDEN", "Orden procesada exitosamente");
+            }
+            else{
+                QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+            }
+
+            //Limpia los campos de los Line Edits
+            ui->LE_producto->clear();
+            ui->LE_precio->clear();
+            ui->LE_descuento->clear();
+}
+
+
+
+
+void MainWindow::on_PB_Buscarproducto_clicked()
+{
+        QString IDproducto2 = ui->LE_productoDB->text();
+        QTableWidget* tabla_resultados2 = ui->tabla_resultados;
+        buscar_productos_por_nombre(IDproducto2, tabla_resultados2);
+}
+
+
+
+void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_resultados)
+{
+    // Configurar conexión a la base de datos
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName(HOST_NAME);
+    db.setUserName(USER_NAME);
+    db.setPassword(PASSWORD);
+    db.setDatabaseName(DATABASE_NAME);
+
+
+    // Conectar a la base de datos
+    if (!db.open()) {
+        std::cerr << "Error al conectar a la base de datos" << std::endl;
+        return;
+    }
+
+    // Realizar consulta SQL
+    QSqlQuery query;
+    query.prepare("SELECT * FROM public.productos WHERE nombre = ?");
+    query.addBindValue(nombre_producto);
+    if (!query.exec()) {
+        std::cerr << "Error al ejecutar la consulta SQL" << std::endl;
+        db.close();
+        return;
+    }
+
+    // Mostrar resultados en la tabla
+    tabla_resultados->clear();
+    tabla_resultados->setColumnCount(3);
+    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Precio", "Descuento"});
+    int row = 0;
+    while (query.next()) {
+        tabla_resultados->insertRow(row);
+        tabla_resultados->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
+        tabla_resultados->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));
+        tabla_resultados->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
+        row++;
+    }
+
+    if (row == 0) {
+        tabla_resultados->setRowCount(1);
+        tabla_resultados->setItem(0, 0, new QTableWidgetItem("No se encontraron productos con el nombre " + nombre_producto));
+    }
+
+    // Cerrar conexión a la base de datos
+    db.close();
+}
+
+
+
+
