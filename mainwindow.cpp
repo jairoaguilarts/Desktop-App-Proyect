@@ -147,10 +147,10 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
 {
     // Realizar consulta SQL
     QSqlQuery query;
-    query.prepare("SELECT * FROM public.productos WHERE nombre = ?");
+    query.prepare("SELECT * FROM products WHERE product_name = ?");
     query.addBindValue(nombre_producto);
     if (!query.exec()) {
-        std::cerr << "Error al ejecutar la consulta SQL" << std::endl;
+        qDebug() << query.lastError().text();
         return;
     }
 
