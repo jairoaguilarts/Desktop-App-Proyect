@@ -43,6 +43,5 @@ private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
 
-    int connectPSQL();
 };
 #endif // MAINWINDOW_H
