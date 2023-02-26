@@ -17,7 +17,7 @@
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
 #define PASSWORD "12345"
-#define DATABASE_NAME "Northwind"
+#define DATABASE_NAME "northwind"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
