@@ -42,6 +42,8 @@ private slots:
 
     void on_PB_Buscarproducto_clicked();
 
+    void on_LE_IDCliente_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
