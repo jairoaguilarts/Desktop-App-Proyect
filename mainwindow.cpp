@@ -109,6 +109,7 @@ int MainWindow::generarIDOrden()
 
 void MainWindow::on_PB_agregardetalles_clicked()
 {
+
     QString idProducto = ui->LE_producto->text();
     QString unitPrice;
     QSqlQuery query1;
