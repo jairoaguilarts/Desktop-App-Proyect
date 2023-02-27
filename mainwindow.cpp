@@ -104,9 +104,6 @@ int MainWindow::generarIDOrden()
 }
 
 
-
-
-
 void MainWindow::on_PB_agregardetalles_clicked()
 {
 
@@ -154,17 +151,12 @@ void MainWindow::on_PB_agregardetalles_clicked()
 }
 
 
-
-
-
-
 void MainWindow::on_PB_Buscarproducto_clicked()
 {
         QString IDproducto2 = ui->LE_productoDB->text();
         QTableWidget* tabla_resultados2 = ui->tabla_resultados;
         buscar_productos_por_nombre(IDproducto2, tabla_resultados2);
 }
-
 
 
 void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_resultados)
@@ -177,6 +169,8 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
         qDebug() << query.lastError().text();
         return;
     }
+    tabla_resultados->clear();
+       tabla_resultados->setRowCount(0);
 
     // Mostrar resultados en la tabla
     tabla_resultados->clear();
@@ -198,9 +192,6 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
 }
 
 
-
-
-
 void MainWindow::on_LE_IDCliente_editingFinished()
 {
     QString idCliente = ui->LE_IDCliente->text();
@@ -211,6 +202,5 @@ void MainWindow::on_LE_IDCliente_editingFinished()
     } else {
         nombre = "";
     }
-
 }
 
