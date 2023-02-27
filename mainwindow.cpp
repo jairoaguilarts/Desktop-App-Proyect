@@ -103,33 +103,56 @@ int MainWindow::generarIDOrden()
     return orderID + 1;
 }
 
+
+
+
+
 void MainWindow::on_PB_agregardetalles_clicked()
 {
-    //Obtiene los datos de los Line Edits
     QString idProducto = ui->LE_producto->text();
-    QString precio = ui->LE_precio->text();
+    QString unitPrice;
+    QSqlQuery query1;
+    if (query1.exec(QString("SELECT unit_price FROM products WHERE product_id = '%1'").arg(idProducto)) && query1.next()) {
+        unitPrice = query1.value(0).toString();
+    } else {
+        unitPrice = "";
+    }
+
+    //Obtiene los datos de los Line Edits
+    QString precio = unitPrice;
     QString cantidad = ui->LE_cantidad->text();
     QString descuento = ui->LE_descuento->text();
 
-    //Inserta los datos a order_details
-    QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
-    QSqlQuery query;
-    query.bindValue(":orderID", orderID_flag);
-    query.bindValue(":productID", idProducto.toInt());
-    query.bindValue(":unitPrice", precio.toDouble());
-    query.bindValue(":quantity", cantidad.toInt());
-    query.bindValue(":discount", descuento.toDouble());
-    if(!query.exec()){
-        QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
-        qDebug() << "Error: " << query.lastError().text();
-    }
-    else{
-        //Limpia los campos de los Line Edits
-        ui->LE_producto->clear();
-        ui->LE_precio->clear();
-        ui->LE_descuento->clear();
+    // Verifica que la orden exista en la tabla orders
+    QSqlQuery query2;
+    if (query2.exec(QString("SELECT order_id FROM orders WHERE order_id = '%1'").arg(orderID_flag)) && query2.next()) {
+        //Inserta los datos a order_details
+        QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
+        QSqlQuery query3;
+        query3.prepare(queryString);
+        query3.bindValue(":orderID", orderID_flag);
+        query3.bindValue(":productID", idProducto.toInt());
+        query3.bindValue(":unitPrice", precio.toDouble());
+        query3.bindValue(":quantity", cantidad.toInt());
+        query3.bindValue(":discount", descuento.toDouble());
+
+        if(!query3.exec()){
+            QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+            qDebug() << "Error: " << query3.lastError().text();
+        }
+        else{
+            //Limpia los campos de los Line Edits
+            ui->LE_producto->clear();
+            ui->LE_cantidad->clear();
+            ui->LE_descuento->clear();
+        }
+    } else {
+        QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
+        qDebug() << "Error: " << query2.lastError().text();
     }
 }
+
+
 
 
 
@@ -147,17 +170,17 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
 {
     // Realizar consulta SQL
     QSqlQuery query;
-    query.prepare("SELECT * FROM public.productos WHERE nombre = ?");
+    query.prepare("SELECT * FROM products WHERE product_name = ?");
     query.addBindValue(nombre_producto);
     if (!query.exec()) {
-        std::cerr << "Error al ejecutar la consulta SQL" << std::endl;
+        qDebug() << query.lastError().text();
         return;
     }
 
     // Mostrar resultados en la tabla
     tabla_resultados->clear();
     tabla_resultados->setColumnCount(3);
-    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Precio", "Descuento"});
+    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "Descuento"});
     int row = 0;
     while (query.next()) {
         tabla_resultados->insertRow(row);
@@ -171,7 +194,6 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
         tabla_resultados->setRowCount(1);
         tabla_resultados->setItem(0, 0, new QTableWidgetItem("No se encontraron productos con el nombre " + nombre_producto));
     }
-
 }
 
 

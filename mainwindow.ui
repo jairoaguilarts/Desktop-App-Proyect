@@ -207,13 +207,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Precio</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="label_16">
         <property name="text">
          <string>Cantidad</string>
@@ -241,9 +234,6 @@
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <widget class="QLineEdit" name="LE_producto"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_precio"/>
       </item>
       <item>
        <widget class="QLineEdit" name="LE_cantidad"/>
@@ -333,7 +323,7 @@
      <x>0</x>
      <y>0</y>
      <width>1188</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
