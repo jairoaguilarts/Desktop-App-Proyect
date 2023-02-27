@@ -1,7 +1,11 @@
 QT       += core gui sql
+<<<<<<< HEAD
 
 ##LIBS += -L/usr/local/Cellar/libpq/15.2/lib -lpq #Conexion macOS
 
+=======
+LIBS += -L/usr/local/Cellar/libpq/15.2/lib -lpq #Conexion macOS
+>>>>>>> dc2f7c2 (Redisign del frame)
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

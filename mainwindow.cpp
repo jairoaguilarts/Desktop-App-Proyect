@@ -200,3 +200,17 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
 
 
 
+
+void MainWindow::on_LE_IDCliente_editingFinished()
+{
+    QString idCliente = ui->LE_IDCliente->text();
+    QString nombre;
+    QSqlQuery query;
+    if (query.exec(QString("SELECT contact_name FROM customers WHERE customer_id = '%1'").arg(idCliente)) && query.next()) {
+        nombre = query.value(0).toString();
+    } else {
+        nombre = "";
+    }
+
+}
+
