@@ -181,7 +181,7 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
     // Mostrar resultados en la tabla
     tabla_resultados->clear();
     tabla_resultados->setColumnCount(3);
-    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "Proveedor"});
+    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "ID Proveedor"});
     int row = 0;
     while (query.next()) {
         tabla_resultados->insertRow(row);
