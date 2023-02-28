@@ -44,6 +44,10 @@ private slots:
 
     void on_LE_IDCliente_editingFinished();
 
+    void on_LE_IDEmpleado_editingFinished();
+
+    void on_LE_IDAgencia_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;

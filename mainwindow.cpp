@@ -200,7 +200,7 @@ void MainWindow::on_LE_IDCliente_editingFinished()
     if (query.exec(QString("SELECT contact_name FROM customers WHERE customer_id = '%1'").arg(idCliente)) && query.next()) {
         nombre = query.value(0).toString();
     } else {
-        nombre = "";
+        nombre = "Cliente no encontrado";
     }
     ui->nombreCliente->setText(nombre);
 }
@@ -212,10 +212,24 @@ void MainWindow::on_LE_IDEmpleado_editingFinished()
     QString nombre;
     QSqlQuery query;
     if (query.exec(QString("SELECT first_name, last_name FROM employees WHERE employee_id = '%1'").arg(idEmpleado)) && query.next()) {
-        nombre = query.value(0).toString() + query.value(1).toString();
+        nombre = query.value(0).toString() + " " + query.value(1).toString();
     } else {
-        nombre = "";
+        nombre = "Empleado no encontrado";
     }
-    ui->nombreCliente->setText(nombre);
+    ui->nombreEmpleado->setText(nombre);
+}
+
+
+void MainWindow::on_LE_IDAgencia_editingFinished()
+{
+    QString idAgencia = ui->LE_IDAgencia->text();
+    QString nombre;
+    QSqlQuery query;
+    if (query.exec(QString("SELECT company_name FROM shippers WHERE shipper_id = '%1'").arg(idAgencia)) && query.next()) {
+        nombre = query.value(0).toString();
+    } else {
+        nombre = "Agencia no encontrada";
+    }
+    ui->nombreAgencia->setText(nombre);
 }
 
