@@ -14,11 +14,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    order.cpp
+    order.cpp \
+    orderdetails.cpp
 
 HEADERS += \
     mainwindow.h \
-    order.h
+    order.h \
+    orderdetails.h
 
 FORMS += \
     mainwindow.ui
