@@ -4,6 +4,8 @@
 #include "orderdetails.h"
 #include <iostream>
 
+
+
 using namespace std;
 
 void asignaciones_constantes_fechas();
@@ -238,5 +240,13 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
         nombre = "Agencia no encontrada";
     }
     ui->nombreAgencia->setText(nombre);
+}
+
+void MainWindow::on_PB_CrearProducto_clicked(){
+    ProductosCRUD * nuevaVentana = new ProductosCRUD(this);
+    this->setCentralWidget(nuevaVentana);
+    nuevaVentana->setDisabled(false);
+    nuevaVentana->show();
+
 }
 
