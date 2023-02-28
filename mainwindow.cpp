@@ -202,5 +202,20 @@ void MainWindow::on_LE_IDCliente_editingFinished()
     } else {
         nombre = "";
     }
+    ui->nombreCliente->setText(nombre);
+}
+
+
+void MainWindow::on_LE_IDEmpleado_editingFinished()
+{
+    QString idEmpleado = ui->LE_IDEmpleado->text();
+    QString nombre;
+    QSqlQuery query;
+    if (query.exec(QString("SELECT first_name, last_name FROM employees WHERE employee_id = '%1'").arg(idEmpleado)) && query.next()) {
+        nombre = query.value(0).toString() + query.value(1).toString();
+    } else {
+        nombre = "";
+    }
+    ui->nombreCliente->setText(nombre);
 }
 
