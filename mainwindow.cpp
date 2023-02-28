@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "order.h"
+#include "orderdetails.h"
 #include <iostream>
 
 using namespace std;
@@ -77,7 +79,10 @@ void MainWindow::on_PB_CrearOrden_clicked()
         qDebug() << "Error: " << query.lastError().text();
     } else {
         orderID_flag = ordenID;
-
+        //Instancia de una orden
+        Order *order = new Order(ordenID, idCliente.toStdString(), idEmpleado.toStdString(), (fechaOrden.toString()).toStdString(), (fechaRequerida.toString()).toStdString(),
+                                 idAgencia.toInt(), peso.toDouble(),nombreBarco.toStdString(), direccionEnvio.toStdString(), ciudad.toStdString(), region.toStdString(),
+                                 codigoPostal.toStdString(), pais.toStdString());
         //Limpia los campos de los Line Edits
         ui->LE_IDCliente->clear();
         ui->LE_IDEmpleado->clear();
@@ -117,7 +122,6 @@ void MainWindow::on_PB_agregardetalles_clicked()
     }
 
     //Obtiene los datos de los Line Edits
-    QString precio = unitPrice;
     QString cantidad = ui->LE_cantidad->text();
     QString descuento = ui->LE_descuento->text();
 
@@ -130,7 +134,7 @@ void MainWindow::on_PB_agregardetalles_clicked()
         query3.prepare(queryString);
         query3.bindValue(":orderID", orderID_flag);
         query3.bindValue(":productID", idProducto.toInt());
-        query3.bindValue(":unitPrice", precio.toDouble());
+        query3.bindValue(":unitPrice", unitPrice.toDouble());
         query3.bindValue(":quantity", cantidad.toInt());
         query3.bindValue(":discount", descuento.toDouble());
 
@@ -139,6 +143,9 @@ void MainWindow::on_PB_agregardetalles_clicked()
             qDebug() << "Error: " << query3.lastError().text();
         }
         else{
+            //Instancia de un detalle de orden
+            OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
+                                                         descuento.toDouble());
             //Limpia los campos de los Line Edits
             ui->LE_producto->clear();
             ui->LE_cantidad->clear();
