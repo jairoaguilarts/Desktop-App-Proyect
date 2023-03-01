@@ -96,6 +96,9 @@ void MainWindow::on_PB_CrearOrden_clicked()
         ui->LE_RegionEnvio->clear();
         ui->LE_CodigoPostal->clear();
         ui->LE_Pais->clear();
+        ui->nombreCliente->setText("");
+        ui->nombreEmpleado->setText("");
+        ui->nombreAgencia->setText("");
     }
 
 }
