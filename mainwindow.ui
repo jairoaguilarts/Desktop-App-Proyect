@@ -349,6 +349,19 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QPushButton" name="emitirorden">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>50</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Emitir Orden </string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -356,7 +369,7 @@
      <x>0</x>
      <y>0</y>
      <width>772</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

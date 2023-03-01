@@ -3,6 +3,8 @@
 #include "order.h"
 #include "orderdetails.h"
 #include <iostream>
+#include <QPrinter>
+#include <QPainter>
 
 using namespace std;
 
@@ -239,4 +241,148 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
     }
     ui->nombreAgencia->setText(nombre);
 }
+
+void MainWindow::on_emitirorden_clicked()
+{
+
+   int orderID_flag=11117;
+    // Realizar una consulta para obtener información de la orden
+    QSqlQuery query;
+    query.prepare("SELECT customers.company_name AS customer_name, "
+                      "employees.last_name || ', ' || employees.first_name AS employee_name, "
+                      "shippers.company_name AS shipper_name, "
+                      "orders.freight, "
+                      "orders.ship_name, "
+                      "orders.ship_address, "
+                      "orders.ship_city, "
+                      "orders.ship_region, "
+                      "orders.ship_postal_code, "
+                      "orders.ship_country "
+                      "FROM orders "
+                      "JOIN customers ON orders.customer_id = customers.customer_id "
+                      "JOIN employees ON orders.employee_id = employees.employee_id "
+                      "JOIN shippers ON orders.ship_via = shippers.shipper_id "
+                      "WHERE orders.order_id = :order_id");
+
+
+    query.bindValue(":order_id", orderID_flag);
+
+    // Ejecutar la consulta y verificar si hay errores
+    if (!query.exec()) {
+        qWarning() << "Error al ejecutar la consulta: " << query.lastError().text();
+        return;
+    }
+
+    // Comprobar si se encontró la orden
+    if (!query.first()) {
+        qWarning() << "No se encontró la orden con ID" << orderID_flag;
+        return;
+    }
+
+    // Obtener los valores de la consulta
+    QString nombreCliente = query.value("customer_name").toString();
+    QString nombreEmpleado = query.value("employee_name").toString();
+    QString nombreAgenciaEnvio = query.value("shipper_name").toString();
+    QString peso = query.value("freight").toString();
+    QString nombreBarco = query.value("ship_name").toString();
+    QString direccionEnvio = query.value("ship_address").toString();
+    QString ciudadEnvio = query.value("ship_city").toString();
+    QString regionEnvio = query.value("ship_region").toString();
+    QString codigoPostalEnvio = query.value("ship_postal_code").toString();
+    QString paisEnvio = query.value("ship_country").toString();
+
+
+    // Obtener los detalles de la orden
+    QSqlQuery query2;
+    query2.prepare("SELECT order_details.product_id, products.product_name, order_details.unit_price, order_details.quantity, order_details.discount "
+                  "FROM order_details "
+                  "JOIN products ON order_details.product_id = products.product_id "
+                  "WHERE order_details.order_id = :order_id");
+    query2.bindValue(":order_id", orderID_flag);
+
+    // Ejecutar la consulta y verificar si hay errores
+    if (!query2.exec()) {
+        qWarning() << "Error al ejecutar la consulta de detalles de la orden: " << query2.lastError().text();
+        return;
+    }
+
+    // Comprobar si hay registros en la consulta
+    if (!query2.first()) {
+        qWarning() << "No se encontraron detalles de la orden con ID" << orderID_flag;
+        return;
+    }
+
+    // Obtener los valores de la consulta
+    QString nombreProducto = query2.value("product_name").toString();
+    QString precioUnitario = query2.value("unit_price").toString();
+    QString cantidad = query2.value("quantity").toString();
+    QString descuento = query2.value("discount").toString();
+
+
+
+
+
+
+    // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
+    QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    // Crear un objeto QPrinter y establecer sus propiedades
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filename);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+
+    // Crear un objeto QPainter para dibujar en el QPrinter
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        qWarning() << "No se puede iniciar la impresión del documento PDF.";
+        return;
+    }
+
+    // Establecer la fuente y el tamaño del texto
+    QFont font("Arial", 12);
+    painter.setFont(font);
+
+
+                          // Establecer el espaciado de línea
+                          painter.setPen(Qt::blue);
+                          painter.drawText(100, 0, "Factura ");
+
+                          painter.setPen(Qt::black);
+
+                          // Dibujar los textos con la información de la orden
+                          painter.setFont(QFont("Arial", 12, QFont::Normal));
+                          painter.drawText(100, 600, "Cliente: " + nombreCliente);
+                          painter.drawText(100, 800, "Empleado: " + nombreEmpleado);
+                          painter.drawText(100, 1000, "Agencia de envío: " + nombreAgenciaEnvio);
+                          painter.drawText(100, 1200, "Peso: " + peso);
+                          painter.drawText(100, 1400, "Nombre del barco: " + nombreBarco);
+                          painter.drawText(100, 1600, "Dirección de envío: " + direccionEnvio);
+                          painter.drawText(100, 1800, "Ciudad de envío: " + ciudadEnvio);
+                          painter.drawText(100, 2000, "Región de envío: " + regionEnvio);
+                          painter.drawText(100, 2200, "Código postal de envío: " + codigoPostalEnvio);
+                          painter.drawText(100, 2400, "País de envío: " + paisEnvio);
+                          painter.drawText(100, 2600, "Nombre del producto: " + nombreProducto);
+                          painter.drawText(100, 2800, "Precio unitario: " + precioUnitario);
+                          painter.drawText(100, 3000, "Cantidad de producto: " + cantidad);
+                          painter.drawText(100, 3200, "Descuento de producto: " + descuento);
+
+
+
+
+                          // Comprobar si la impresión ha finalizado correctamente
+                          if (!painter.end()) {
+                              qWarning() << "No se puede finalizar la impresión del documento PDF.";
+                              return;
+                          }
+
+                          // Mostrar un mensaje de confirmación al usuario
+                          QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
+
+
+}
+
 
