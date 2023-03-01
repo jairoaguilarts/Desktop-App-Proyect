@@ -320,11 +320,6 @@ void MainWindow::on_emitirorden_clicked()
     QString cantidad = query2.value("quantity").toString();
     QString descuento = query2.value("discount").toString();
 
-
-
-
-
-
     // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
     QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
     if (filename.isEmpty()) {
@@ -349,42 +344,37 @@ void MainWindow::on_emitirorden_clicked()
     painter.setFont(font);
 
 
-                          // Establecer el espaciado de línea
-                          painter.setPen(Qt::blue);
-                          painter.drawText(100, 0, "Factura ");
+    // Establecer el espaciado de línea
+    painter.setPen(Qt::blue);
+    painter.drawText(100, 0, "Factura ");
 
-                          painter.setPen(Qt::black);
+    painter.setPen(Qt::black);
 
-                          // Dibujar los textos con la información de la orden
-                          painter.setFont(QFont("Arial", 12, QFont::Normal));
-                          painter.drawText(100, 600, "Cliente: " + nombreCliente);
-                          painter.drawText(100, 800, "Empleado: " + nombreEmpleado);
-                          painter.drawText(100, 1000, "Agencia de envío: " + nombreAgenciaEnvio);
-                          painter.drawText(100, 1200, "Peso: " + peso);
-                          painter.drawText(100, 1400, "Nombre del barco: " + nombreBarco);
-                          painter.drawText(100, 1600, "Dirección de envío: " + direccionEnvio);
-                          painter.drawText(100, 1800, "Ciudad de envío: " + ciudadEnvio);
-                          painter.drawText(100, 2000, "Región de envío: " + regionEnvio);
-                          painter.drawText(100, 2200, "Código postal de envío: " + codigoPostalEnvio);
-                          painter.drawText(100, 2400, "País de envío: " + paisEnvio);
-                          painter.drawText(100, 2600, "Nombre del producto: " + nombreProducto);
-                          painter.drawText(100, 2800, "Precio unitario: " + precioUnitario);
-                          painter.drawText(100, 3000, "Cantidad de producto: " + cantidad);
-                          painter.drawText(100, 3200, "Descuento de producto: " + descuento);
+    // Dibujar los textos con la información de la orden
+    painter.setFont(QFont("Arial", 12, QFont::Normal));
+    painter.drawText(100, 600, "Cliente: " + nombreCliente);
+    painter.drawText(100, 800, "Empleado: " + nombreEmpleado);
+    painter.drawText(100, 1000, "Agencia de envío: " + nombreAgenciaEnvio);
+    painter.drawText(100, 1200, "Peso: " + peso);
+    painter.drawText(100, 1400, "Nombre del barco: " + nombreBarco);
+    painter.drawText(100, 1600, "Dirección de envío: " + direccionEnvio);
+    painter.drawText(100, 1800, "Ciudad de envío: " + ciudadEnvio);
+    painter.drawText(100, 2000, "Región de envío: " + regionEnvio);
+    painter.drawText(100, 2200, "Código postal de envío: " + codigoPostalEnvio);
+    painter.drawText(100, 2400, "País de envío: " + paisEnvio);
+    painter.drawText(100, 2600, "Nombre del producto: " + nombreProducto);
+    painter.drawText(100, 2800, "Precio unitario: " + precioUnitario);
+    painter.drawText(100, 3000, "Cantidad de producto: " + cantidad);
+    painter.drawText(100, 3200, "Descuento de producto: " + descuento);
 
+    // Comprobar si la impresión ha finalizado correctamente
+    if (!painter.end()) {
+        qWarning() << "No se puede finalizar la impresión del documento PDF.";
+        return;
+    }
 
-
-
-                          // Comprobar si la impresión ha finalizado correctamente
-                          if (!painter.end()) {
-                              qWarning() << "No se puede finalizar la impresión del documento PDF.";
-                              return;
-                          }
-
-                          // Mostrar un mensaje de confirmación al usuario
-                          QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
-
-
+    // Mostrar un mensaje de confirmación al usuario
+    QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
 }
 
 
