@@ -72,7 +72,7 @@ void MainWindow::on_PB_CrearOrden_clicked()
     query.bindValue(":freight", peso.toDouble());
     query.bindValue(":shipName", nombreBarco);
     query.bindValue(":shipAddress", direccionEnvio);
-    query.bindValue("shipCity", ciudad);
+    query.bindValue(":shipCity", ciudad);
     query.bindValue(":shipRegion", region);
     query.bindValue(":shipPostalCode", codigoPostal);
     query.bindValue(":shipCountry", pais);
