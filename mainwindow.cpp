@@ -248,6 +248,7 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
 void MainWindow::on_emitirorden_clicked()
 {
 
+
     // Realizar una consulta para obtener información de la orden
     QSqlQuery query;
     query.prepare("SELECT customers.contact_name AS customer_name, "
@@ -320,6 +321,14 @@ void MainWindow::on_emitirorden_clicked()
     QString cantidad = query2.value("quantity").toString();
     QString descuento = query2.value("discount").toString();
 
+
+    double precioUnitarioNum =precioUnitario.toDouble() ;
+    int cantidadNum = cantidad.toInt();
+    float descuento2 = descuento.toDouble();
+
+    float sub_total=  cantidadNum * precioUnitarioNum;
+    float total= sub_total * descuento2;
+    float total1=sub_total - total;
     // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
     QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
     if (filename.isEmpty()) {
@@ -366,6 +375,8 @@ void MainWindow::on_emitirorden_clicked()
     painter.drawText(100, 2800, "Precio unitario: " + precioUnitario);
     painter.drawText(100, 3000, "Cantidad de producto: " + cantidad);
     painter.drawText(100, 3200, "Descuento de producto: " + descuento);
+    painter.drawText(100, 3400,QString("Subtotal: %1").arg(sub_total));
+    painter.drawText(100, 3600, QString("Total: %1").arg(total1));
 
     // Comprobar si la impresión ha finalizado correctamente
     if (!painter.end()) {
