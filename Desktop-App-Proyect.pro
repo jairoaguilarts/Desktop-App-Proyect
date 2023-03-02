@@ -1,4 +1,5 @@
 QT       += core gui sql
+QT += printsupport
 
 #LIBS += -L/usr/local/Cellar/libpq/15.2/lib -lpq #Conexion macOS
 

@@ -51,6 +51,8 @@ private slots:
 
     void on_LE_IDAgencia_editingFinished();
 
+    void on_emitirorden_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
