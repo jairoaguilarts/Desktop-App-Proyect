@@ -247,6 +247,35 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
 
 void MainWindow::on_emitirorden_clicked()
 {
+    orderID_flag = 11085;
+    // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
+    QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    // Crear un objeto QPrinter y establecer sus propiedades
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(filename);
+    printer.setPageSize(QPageSize(QPageSize::A4));
+
+    // Crear un objeto QPainter para dibujar en el QPrinter
+    QPainter painter;
+    if (!painter.begin(&printer)) {
+        qWarning() << "No se puede iniciar la impresión del documento PDF.";
+        return;
+    }
+
+    // Establecer la fuente y el tamaño del texto
+    QFont font("Times New Roman", 14);
+    painter.setFont(font);
+
+    // Establecer el espaciado de línea
+    painter.setPen(Qt::blue);
+    painter.drawText(4200, 50, "FACTURA ");
+
+    painter.setPen(Qt::black);
 
     // Realizar una consulta para obtener información de la orden
     QSqlQuery query;
@@ -293,6 +322,38 @@ void MainWindow::on_emitirorden_clicked()
     QString codigoPostalEnvio = query.value("ship_postal_code").toString();
     QString paisEnvio = query.value("ship_country").toString();
 
+    //Coordenadas
+    int x = 3500;
+    int y = 600;
+
+    // Dibujar los textos con la información de la orden
+    painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
+    painter.drawText(x, y, "Cliente:................." + nombreCliente);
+    y += 200;
+    painter.drawText(x, y, "Empleado:................" + nombreEmpleado);
+    y += 200;
+    painter.drawText(x, y, "Agencia de envío:......." + nombreAgenciaEnvio);
+    y += 200;
+    painter.drawText(x, y, "Peso:..................." + peso);
+    y += 200;
+    painter.drawText(x, y, "Nombre del barco:......." + nombreBarco);
+    y += 200;
+    painter.drawText(x, y, "Dirección de envío:....." + direccionEnvio);
+    y += 200;
+    painter.drawText(x, y, "Ciudad de envío:........" + ciudadEnvio);
+    y += 200;
+    painter.drawText(x, y, "Región de envío:........" + regionEnvio);
+    y += 200;
+    painter.drawText(x, y, "Código postal de envío: " + codigoPostalEnvio);
+    y += 200;
+    painter.drawText(x, y, "País de envío:.........." + paisEnvio);
+    y += 600;
+    painter.setFont(QFont("Times New Roman", 14, QFont::Normal));
+
+    // Establecer el espaciado de línea
+    painter.setPen(Qt::blue);
+    painter.drawText(3800, y, "DETALLES DE LA ORDEN ");
+    painter.setPen(Qt::black);
 
     // Obtener los detalles de la orden
     QSqlQuery query2;
@@ -302,89 +363,50 @@ void MainWindow::on_emitirorden_clicked()
                   "WHERE order_details.order_id = :order_id");
     query2.bindValue(":order_id", orderID_flag);
 
+    QString nombreProducto;
+    QString precioUnitario;
+    QString cantidad;
+    QString descuento;
+
+    y += 400;
+    float sub_total = 0;
+    float total = 0;
+    float total1 = 0;
     // Ejecutar la consulta y verificar si hay errores
-    if (!query2.exec()) {
+    if (query2.exec()) {
+        while(query2.next()){
+            // Obtener los valores de la consulta
+            nombreProducto = query2.value("product_name").toString();
+            precioUnitario = query2.value("unit_price").toString();
+            cantidad = query2.value("quantity").toString();
+            descuento = query2.value("discount").toString();
+            double precioUnitarioNum =precioUnitario.toDouble() ;
+            int cantidadNum = cantidad.toInt();
+            float descuento2 = descuento.toDouble();
+
+            sub_total +=  cantidadNum * precioUnitarioNum;
+            total += sub_total * descuento2;
+            total1 += sub_total - total;
+
+            // Dibujar los textos con la información de la orden
+            painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
+            painter.drawText(3500, y, "Nombre del producto:...." + nombreProducto);
+            y += 200;
+            painter.drawText(3500, y, "Precio unitario:........" + precioUnitario);
+            y += 200;
+            painter.drawText(3500, y, "Cantidad de producto:..." + cantidad);
+            y += 200;
+            painter.drawText(3500, y, "Descuento de producto:.." + descuento);
+            y += 400;
+        }
+        painter.drawText(3500, y,QString("Subtotal: .....  $%1").arg(sub_total));
+        y += 200;
+        painter.drawText(3500, y, QString("Total: .......  $%1").arg(total1));
+        y += 200;
+    } else {
         qWarning() << "Error al ejecutar la consulta de detalles de la orden: " << query2.lastError().text();
         return;
     }
-
-    // Comprobar si hay registros en la consulta
-    if (!query2.first()) {
-        qWarning() << "No se encontraron detalles de la orden con ID" << orderID_flag;
-        return;
-    }
-
-    // Obtener los valores de la consulta
-    QString nombreProducto = query2.value("product_name").toString();
-    QString precioUnitario = query2.value("unit_price").toString();
-    QString cantidad = query2.value("quantity").toString();
-    QString descuento = query2.value("discount").toString();
-
-
-    double precioUnitarioNum =precioUnitario.toDouble() ;
-    int cantidadNum = cantidad.toInt();
-    float descuento2 = descuento.toDouble();
-
-    float sub_total=  cantidadNum * precioUnitarioNum;
-    float total= sub_total * descuento2;
-    float total1=sub_total - total;
-    // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
-    QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
-    if (filename.isEmpty()) {
-        return;
-    }
-
-    // Crear un objeto QPrinter y establecer sus propiedades
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(filename);
-    printer.setPageSize(QPageSize(QPageSize::A4));
-
-    // Crear un objeto QPainter para dibujar en el QPrinter
-    QPainter painter;
-    if (!painter.begin(&printer)) {
-        qWarning() << "No se puede iniciar la impresión del documento PDF.";
-        return;
-    }
-
-    // Establecer la fuente y el tamaño del texto
-    QFont font("Times New Roman", 14);
-    painter.setFont(font);
-
-
-    // Establecer el espaciado de línea
-    painter.setPen(Qt::blue);
-    painter.drawText(4200, 50, "FACTURA ");
-
-    painter.setPen(Qt::black);
-
-    // Dibujar los textos con la información de la orden
-    painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
-    painter.drawText(3500, 600, "Cliente:................." + nombreCliente);
-    painter.drawText(3500, 800, "Empleado:................" + nombreEmpleado);
-    painter.drawText(3500, 1000, "Agencia de envío:......." + nombreAgenciaEnvio);
-    painter.drawText(3500, 1200, "Peso:..................." + peso);
-    painter.drawText(3500, 1400, "Nombre del barco:......." + nombreBarco);
-    painter.drawText(3500, 1600, "Dirección de envío:....." + direccionEnvio);
-    painter.drawText(3500, 1800, "Ciudad de envío:........" + ciudadEnvio);
-    painter.drawText(3500, 2000, "Región de envío:........" + regionEnvio);
-    painter.drawText(3500, 2200, "Código postal de envío: " + codigoPostalEnvio);
-    painter.drawText(3500, 2400, "País de envío:.........." + paisEnvio);
-    painter.drawText(100, 2600, "            " );
-    painter.drawText(100, 2800, "            " );
-    painter.setFont(QFont("Times New Roman", 14, QFont::Normal));
-    // Establecer el espaciado de línea
-    painter.setPen(Qt::blue);
-    painter.drawText(3800, 3000, "DETALLES DE LA ORDEN ");
-    painter.setPen(Qt::black);
-    // Dibujar los textos con la información de la orden
-    painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
-    painter.drawText(3500, 3200, "Nombre del producto:...." + nombreProducto);
-    painter.drawText(3500, 3400, "Precio unitario:........" + precioUnitario);
-    painter.drawText(3500, 3600, "Cantidad de producto:..." + cantidad);
-    painter.drawText(3500, 3800, "Descuento de producto:.." + descuento);
-    painter.drawText(3500, 4000,QString("Subtotal: .....  $%1").arg(sub_total));
-    painter.drawText(3500, 4200, QString("Total: .......  $%1").arg(total1));
 
     // Comprobar si la impresión ha finalizado correctamente
     if (!painter.end()) {
