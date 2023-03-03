@@ -37,8 +37,8 @@ void Reportes::setCategoria(bool flag)
 void Reportes::on_pushButton_clicked()
 {
     QString id = uiReporte->LE_ID->text();
+    QSqlQueryModel *queryModel = new QSqlQueryModel();
     if(cliente){
-        QSqlQueryModel *queryModel = new QSqlQueryModel();
         queryModel->setQuery(QString("SELECT extract(year from orders.order_date) AS Year, "
                                      "extract(month from orders.order_date) AS Month, "
                                      "SUM(order_details.quantity * order_details.unit_price) AS TotalPaid "
@@ -47,10 +47,17 @@ void Reportes::on_pushButton_clicked()
                                      "WHERE customers.customer_id = '%1' "
                                      "GROUP BY extract(year from orders.order_date), extract(month from orders.order_date) "
                                      "ORDER BY extract(year from orders.order_date), extract(month from orders.order_date)").arg(id));
-        uiReporte->TV_Reporte->setModel(queryModel);
     } else if(proveedor){
-
+        queryModel->setQuery(QString("SELECT EXTRACT(YEAR FROM o.order_date) AS Year, SUM(od.quantity) AS TotalSold "
+                             "FROM suppliers s "
+                             "JOIN products p ON s.supplier_id = p.supplier_id "
+                             "JOIN order_details od ON p.product_id = od.product_id "
+                             "JOIN orders o ON od.order_id = o.order_id "
+                             "WHERE s.supplier_id = %1 "
+                             "GROUP BY EXTRACT(YEAR FROM o.order_date) "
+                             "ORDER BY EXTRACT(YEAR FROM o.order_date)").arg(id.toInt()));
     } else if(categoria){
 
     }
+    uiReporte->TV_Reporte->setModel(queryModel);
 }
