@@ -198,7 +198,6 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
     }
 
     if (row == 0) {
-        tabla_resultados->setRowCount(1);
         tabla_resultados->setItem(0, 0, new QTableWidgetItem("No se encontraron productos con el nombre " + nombre_producto));
     }
 }
@@ -248,7 +247,7 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
 void MainWindow::on_emitirorden_clicked()
 {
 
-
+    int orderID_flag=11124;
     // Realizar una consulta para obtener información de la orden
     QSqlQuery query;
     query.prepare("SELECT customers.contact_name AS customer_name, "
@@ -349,34 +348,43 @@ void MainWindow::on_emitirorden_clicked()
     }
 
     // Establecer la fuente y el tamaño del texto
-    QFont font("Arial", 12);
+    QFont font("Times New Roman", 14);
     painter.setFont(font);
 
 
     // Establecer el espaciado de línea
     painter.setPen(Qt::blue);
-    painter.drawText(100, 0, "Factura ");
+    painter.drawText(4200, 50, "FACTURA ");
 
     painter.setPen(Qt::black);
 
     // Dibujar los textos con la información de la orden
-    painter.setFont(QFont("Arial", 12, QFont::Normal));
-    painter.drawText(100, 600, "Cliente: " + nombreCliente);
-    painter.drawText(100, 800, "Empleado: " + nombreEmpleado);
-    painter.drawText(100, 1000, "Agencia de envío: " + nombreAgenciaEnvio);
-    painter.drawText(100, 1200, "Peso: " + peso);
-    painter.drawText(100, 1400, "Nombre del barco: " + nombreBarco);
-    painter.drawText(100, 1600, "Dirección de envío: " + direccionEnvio);
-    painter.drawText(100, 1800, "Ciudad de envío: " + ciudadEnvio);
-    painter.drawText(100, 2000, "Región de envío: " + regionEnvio);
-    painter.drawText(100, 2200, "Código postal de envío: " + codigoPostalEnvio);
-    painter.drawText(100, 2400, "País de envío: " + paisEnvio);
-    painter.drawText(100, 2600, "Nombre del producto: " + nombreProducto);
-    painter.drawText(100, 2800, "Precio unitario: " + precioUnitario);
-    painter.drawText(100, 3000, "Cantidad de producto: " + cantidad);
-    painter.drawText(100, 3200, "Descuento de producto: " + descuento);
-    painter.drawText(100, 3400,QString("Subtotal: %1").arg(sub_total));
-    painter.drawText(100, 3600, QString("Total: %1").arg(total1));
+    painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
+    painter.drawText(3500, 600, "Cliente:................." + nombreCliente);
+    painter.drawText(3500, 800, "Empleado:................" + nombreEmpleado);
+    painter.drawText(3500, 1000, "Agencia de envío:......." + nombreAgenciaEnvio);
+    painter.drawText(3500, 1200, "Peso:..................." + peso);
+    painter.drawText(3500, 1400, "Nombre del barco:......." + nombreBarco);
+    painter.drawText(3500, 1600, "Dirección de envío:....." + direccionEnvio);
+    painter.drawText(3500, 1800, "Ciudad de envío:........" + ciudadEnvio);
+    painter.drawText(3500, 2000, "Región de envío:........" + regionEnvio);
+    painter.drawText(3500, 2200, "Código postal de envío: " + codigoPostalEnvio);
+    painter.drawText(3500, 2400, "País de envío:.........." + paisEnvio);
+    painter.drawText(100, 2600, "            " );
+    painter.drawText(100, 2800, "            " );
+    painter.setFont(QFont("Times New Roman", 14, QFont::Normal));
+    // Establecer el espaciado de línea
+    painter.setPen(Qt::blue);
+    painter.drawText(3800, 3000, "DETALLES DE LA ORDEN ");
+    painter.setPen(Qt::black);
+    // Dibujar los textos con la información de la orden
+    painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
+    painter.drawText(3500, 3200, "Nombre del producto:...." + nombreProducto);
+    painter.drawText(3500, 3400, "Precio unitario:........" + precioUnitario);
+    painter.drawText(3500, 3600, "Cantidad de producto:..." + cantidad);
+    painter.drawText(3500, 3800, "Descuento de producto:.." + descuento);
+    painter.drawText(3500, 4000,QString("Subtotal: .....  $%1").arg(sub_total));
+    painter.drawText(3500, 4200, QString("Total: .......  $%1").arg(total1));
 
     // Comprobar si la impresión ha finalizado correctamente
     if (!painter.end()) {
