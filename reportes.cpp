@@ -57,7 +57,13 @@ void Reportes::on_pushButton_clicked()
                              "GROUP BY EXTRACT(YEAR FROM o.order_date) "
                              "ORDER BY EXTRACT(YEAR FROM o.order_date)").arg(id.toInt()));
     } else if(categoria){
-
+        queryModel->setQuery(QString("SELECT c.category_name, COUNT(p.product_id) AS total_products, SUM(od.quantity) AS total_sold "
+                                     "FROM categories c "
+                                     "JOIN products p ON c.category_id = p.category_id "
+                                     "JOIN order_details od ON p.product_id = od.product_id "
+                                     "WHERE c.category_id = %1 "
+                                     "GROUP BY c.category_name "
+                                     "ORDER BY c.category_name").arg(id.toInt()));
     }
     uiReporte->TV_Reporte->setModel(queryModel);
 }
