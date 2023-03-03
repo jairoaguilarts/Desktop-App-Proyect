@@ -389,19 +389,18 @@ void MainWindow::on_emitirorden_clicked()
 
             // Dibujar los textos con la información de la orden
             painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
-            painter.drawText(3500, y, "Nombre del producto:...." + nombreProducto);
+            painter.drawText(x, y, "Nombre del producto:...." + nombreProducto);
             y += 200;
-            painter.drawText(3500, y, "Precio unitario:........" + precioUnitario);
+            painter.drawText(x, y, "Precio unitario:........" + precioUnitario);
             y += 200;
-            painter.drawText(3500, y, "Cantidad de producto:..." + cantidad);
+            painter.drawText(x, y, "Cantidad de producto:..." + cantidad);
             y += 200;
-            painter.drawText(3500, y, "Descuento de producto:.." + descuento);
+            painter.drawText(x, y, "Descuento de producto:.." + descuento);
             y += 400;
         }
-        painter.drawText(3500, y,QString("Subtotal: .....  $%1").arg(sub_total));
+        painter.drawText(x, y,QString("Subtotal: .....  $%1").arg(sub_total));
         y += 200;
-        painter.drawText(3500, y, QString("Total: .......  $%1").arg(total1));
-        y += 200;
+        painter.drawText(x, y, QString("Total: .......  $%1").arg(total1));
     } else {
         qWarning() << "Error al ejecutar la consulta de detalles de la orden: " << query2.lastError().text();
         return;
