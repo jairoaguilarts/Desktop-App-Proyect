@@ -247,7 +247,6 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
 void MainWindow::on_emitirorden_clicked()
 {
 
-    int orderID_flag=11124;
     // Realizar una consulta para obtener información de la orden
     QSqlQuery query;
     query.prepare("SELECT customers.contact_name AS customer_name, "
