@@ -247,7 +247,6 @@ void MainWindow::on_LE_IDAgencia_editingFinished()
 
 void MainWindow::on_emitirorden_clicked()
 {
-    orderID_flag = 11085;
     // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
     QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
     if (filename.isEmpty()) {
