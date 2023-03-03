@@ -37,14 +37,6 @@ void Reportes::setCategoria(bool flag)
 void Reportes::on_pushButton_clicked()
 {
     QString id = uiReporte->LE_ID->text();
-    /*
-     *     QSqlQuery query2;
-    query2.prepare("SELECT order_details.product_id, products.product_name, order_details.unit_price, order_details.quantity, order_details.discount "
-                  "FROM order_details "
-                  "JOIN products ON order_details.product_id = products.product_id "
-                  "WHERE order_details.order_id = :order_id");
-    query2.bindValue(":order_id", orderID_flag);
-     */
     if(cliente){
         QSqlQueryModel *queryModel = new QSqlQueryModel();
         queryModel->setQuery(QString("SELECT extract(year from orders.order_date) AS Year, "
