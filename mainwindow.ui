@@ -6,361 +6,387 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>772</width>
-    <height>720</height>
+    <width>616</width>
+    <height>556</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>341</width>
-      <height>391</height>
+      <x>20</x>
+      <y>20</y>
+      <width>571</width>
+      <height>461</height>
      </rect>
     </property>
-    <property name="title">
-     <string>Datos de la Orden</string>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>151</width>
-       <height>311</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>ID Cliente</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>ID Empleado</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>ID Agencia</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Peso</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Nombre del Barco</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Direccion de Envio</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Ciudad</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Region</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Codigo postal</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Pais</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>30</y>
-       <width>151</width>
-       <height>321</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLineEdit" name="LE_IDCliente"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_IDEmpleado"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_IDAgencia"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_Peso"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_NombreBarco"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_DireccionEnvio"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_CiudadEnvio"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_RegionEnvio"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_CodigoPostal"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_Pais"/>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QPushButton" name="PB_CrearOrden">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>350</y>
-       <width>100</width>
-       <height>32</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Crear Orden</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>341</width>
-      <height>201</height>
-     </rect>
+    <property name="currentIndex">
+     <number>1</number>
     </property>
-    <property name="title">
-     <string>Detalles de la Orden</string>
-    </property>
-    <widget class="QWidget" name="verticalLayoutWidget_3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>151</width>
-       <height>121</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>ID Producto</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>Cantidad</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Descuento</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Orden</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>0</y>
+        <width>341</width>
+        <height>391</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Datos de la Orden</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>151</width>
+         <height>311</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>ID Cliente</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>ID Empleado</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>ID Agencia</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Peso</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Nombre del Barco</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Direccion de Envio</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Ciudad</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Region</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Codigo postal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Pais</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>30</y>
+         <width>151</width>
+         <height>321</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="LE_IDCliente"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_IDEmpleado"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_IDAgencia"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_Peso"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_NombreBarco"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_DireccionEnvio"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_CiudadEnvio"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_RegionEnvio"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_CodigoPostal"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_Pais"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="PB_CrearOrden">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>350</y>
+         <width>100</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Crear Orden</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>10</y>
+        <width>161</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Datos</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>141</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="nombreCliente">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="nombreEmpleado">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="nombreAgencia">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="emitirorden">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>160</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Emitir Orden </string>
+      </property>
+     </widget>
     </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_4">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>30</y>
-       <width>151</width>
-       <height>121</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QLineEdit" name="LE_producto"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_cantidad"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="LE_descuento"/>
-      </item>
-     </layout>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Detalles de la Orden</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>230</y>
+        <width>381</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Buscar Procuctos</string>
+      </property>
+      <widget class="QTableWidget" name="tabla_resultados">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>60</y>
+         <width>256</width>
+         <height>81</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="PB_Buscarproducto">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>150</y>
+         <width>121</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Buscar Producto</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>211</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Escriba el nombre de producto:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="LE_productoDB">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>30</y>
+         <width>113</width>
+         <height>25</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>10</y>
+        <width>341</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Detalles de la Orden</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>151</width>
+         <height>121</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>ID Producto</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_16">
+          <property name="text">
+           <string>Cantidad</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Descuento</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>30</y>
+         <width>151</width>
+         <height>121</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLineEdit" name="LE_producto"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_cantidad"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="LE_descuento"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="PB_agregardetalles">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>160</y>
+         <width>121</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Agregar Detalles</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="PB_agregardetalles">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>160</y>
-       <width>121</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Agregar Detalles</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_3">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>280</y>
-      <width>381</width>
-      <height>301</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Buscar Procuctos</string>
-    </property>
-    <widget class="QTableWidget" name="tabla_resultados">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>60</y>
-       <width>256</width>
-       <height>192</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="PB_Buscarproducto">
-     <property name="geometry">
-      <rect>
-       <x>130</x>
-       <y>260</y>
-       <width>121</width>
-       <height>29</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Buscar Producto</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_15">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>211</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Escriba el nombre de producto:</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="LE_productoDB">
-     <property name="geometry">
-      <rect>
-       <x>240</x>
-       <y>30</y>
-       <width>113</width>
-       <height>25</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_4">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>10</y>
-      <width>161</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Datos</string>
-    </property>
-    <widget class="QWidget" name="verticalLayoutWidget_5">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>30</y>
-       <width>141</width>
-       <height>81</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <item>
-       <widget class="QLabel" name="nombreCliente">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="nombreEmpleado">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="nombreAgencia">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="emitirorden">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>50</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Emitir Orden </string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -368,8 +394,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>772</width>
-     <height>26</height>
+     <width>616</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

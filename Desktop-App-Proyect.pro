@@ -1,7 +1,7 @@
 QT       += core gui sql
 QT += printsupport
 
-#LIBS += -L/usr/local/Cellar/libpq/15.2/lib -lpq #Conexion macOS
+LIBS += -L/usr/local/Cellar/libpq/15.2/lib -lpq #Conexion macOS
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -16,15 +16,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     order.cpp \
-    orderdetails.cpp
+    orderdetails.cpp \
+    reportes.cpp
 
 HEADERS += \
     mainwindow.h \
     order.h \
-    orderdetails.h
+    orderdetails.h \
+    reportes.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    reportes.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
