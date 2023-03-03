@@ -15,6 +15,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QRandomGenerator>
+#include "order.h"
 
 //Cambiar
 #define HOST_NAME "localhost"
@@ -49,6 +50,12 @@ private slots:
     void on_LE_IDAgencia_editingFinished();
 
     void on_emitirorden_clicked();
+
+    void on_PB_reporteCliente_clicked();
+
+    void on_PB_reporteProveedor_clicked();
+
+    void on_PB_reporteCategoria_clicked();
 
 private:
     Ui::MainWindow *ui;

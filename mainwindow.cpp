@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "order.h"
 #include "orderdetails.h"
+#include "reportes.h"
+#include "ui_reportes.h"
 #include <iostream>
 #include <QPrinter>
 #include <QPainter>
@@ -395,4 +396,32 @@ void MainWindow::on_emitirorden_clicked()
     QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
 }
 
+void MainWindow::on_PB_reporteCliente_clicked()
+{
+    Reportes *reporte = new Reportes();
+    reporte->setCliente(true);
+    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del cliente");
+    reporte->setModal(true);
+    reporte->show();
+}
+
+
+void MainWindow::on_PB_reporteProveedor_clicked()
+{
+    Reportes *reporte = new Reportes();
+    reporte->setProveedor(true);
+    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del proveedor");
+    reporte->setModal(true);
+    reporte->show();
+}
+
+
+void MainWindow::on_PB_reporteCategoria_clicked()
+{
+    Reportes *reporte = new Reportes();
+    reporte->setCategoria(true);
+    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID de la categoria");
+    reporte->setModal(true);
+    reporte->show();
+}
 
