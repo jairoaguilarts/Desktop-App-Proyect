@@ -404,6 +404,14 @@ void MainWindow::on_emitirorden_clicked()
         painter.drawText(x, y,QString("Subtotal: .....  $%1").arg(sub_total));
         y += 200;
         painter.drawText(x, y, QString("Total: .......  $%1").arg(total1));
+         y += 500;
+         x+=600;
+        painter.drawText(x, y, "||||||||||||||||||||||||||||||||||" );
+        y += 100;
+        painter.drawText(x, y, "||||||||||||||||||||||||||||||||||" );
+        x+=300;
+        y += 200;
+        painter.drawText(x, y, "90218328" );
     } else {
         qWarning() << "Error al ejecutar la consulta de detalles de la orden: " << query2.lastError().text();
         return;
