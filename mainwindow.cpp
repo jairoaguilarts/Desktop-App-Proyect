@@ -257,7 +257,7 @@ void MainWindow::on_emitirorden_clicked()
     QPrinter printer(QPrinter::HighResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(filename);
-    printer.setPageSize(QPageSize(QPageSize::A4));
+    printer.setPageSize(QPageSize(QPageSize::EnvelopeC65));
 
     // Crear un objeto QPainter para dibujar en el QPrinter
     QPainter painter;
@@ -272,7 +272,10 @@ void MainWindow::on_emitirorden_clicked()
 
     // Establecer el espaciado de línea
     painter.setPen(Qt::blue);
-    painter.drawText(4200, 50, "FACTURA ");
+    painter.drawText(0, 50, " ");
+    painter.drawText(0, 200, " ");
+    painter.drawText(0, 400, " ");
+    painter.drawText(1900, 600, "FACTURA ");
 
     painter.setPen(Qt::black);
 
@@ -322,8 +325,8 @@ void MainWindow::on_emitirorden_clicked()
     QString paisEnvio = query.value("ship_country").toString();
 
     //Coordenadas
-    int x = 3500;
-    int y = 600;
+    int x = 1200;
+    int y = 1200;
 
     // Dibujar los textos con la información de la orden
     painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
@@ -351,7 +354,7 @@ void MainWindow::on_emitirorden_clicked()
 
     // Establecer el espaciado de línea
     painter.setPen(Qt::blue);
-    painter.drawText(3800, y, "DETALLES DE LA ORDEN ");
+    painter.drawText(x, y, "DETALLES DE LA ORDEN ");
     painter.setPen(Qt::black);
 
     // Obtener los detalles de la orden
