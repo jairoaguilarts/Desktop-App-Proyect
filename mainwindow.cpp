@@ -445,3 +445,11 @@ void MainWindow::on_PB_reporteCategoria_clicked()
     reporte->show();
 }
 
+
+void MainWindow::on_PB_CRUDProductos_clicked()
+{
+    productosCRUD * pWindow = new productosCRUD();
+    pWindow->setModal(true);
+    pWindow->show();
+}
+

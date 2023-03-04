@@ -16,6 +16,7 @@
 #include <QSqlError>
 #include <QRandomGenerator>
 #include "order.h"
+#include "productoscrud.h"
 
 //Cambiar
 #define HOST_NAME "localhost"
@@ -56,6 +57,8 @@ private slots:
     void on_PB_reporteProveedor_clicked();
 
     void on_PB_reporteCategoria_clicked();
+
+    void on_PB_CRUDProductos_clicked();
 
 private:
     Ui::MainWindow *ui;
