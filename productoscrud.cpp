@@ -5,12 +5,6 @@ productosCRUD::productosCRUD(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::productosCRUD)
 {
-    database = QSqlDatabase::addDatabase("QPSQL");
-    database.setHostName(HOST_NAME);
-    database.setUserName(USER_NAME);
-    database.setPassword(PASSWORD);
-    database.setDatabaseName(DATABASE_NAME);
-    database.open();
     ui->setupUi(this);
 }
 
