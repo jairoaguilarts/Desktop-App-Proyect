@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>735</width>
+    <width>720</width>
     <height>818</height>
    </rect>
   </property>
@@ -386,6 +386,42 @@
    <property name="title">
     <string>Exterminar &gt;:U</string>
    </property>
+   <widget class="QPushButton" name="PB_DescProd">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>120</y>
+      <width>251</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Descontinuar Producto</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LE_E_ID">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>251</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ID del Producto</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
    <property name="geometry">
@@ -399,6 +435,29 @@
    <property name="title">
     <string>Visualizar</string>
    </property>
+   <widget class="QTableWidget" name="tabla_productos">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>691</width>
+      <height>141</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_MostrarProd">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>160</y>
+      <width>171</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mostrar Productos</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
