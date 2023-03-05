@@ -15,11 +15,12 @@ private:
     string cant_x_unidad;
     double precio_unidad;
     int unidad_disp;
+    int unidad_ordenadas;
     int nivel_reorden;
     bool descontinuado;
 
 public:
-    Products(int, string, int, int, string, double, int, int, bool);
+    Products(int, string, int, int, string, double, int, int, int, bool);
 
     int getId();
     void setId(int);
@@ -35,6 +36,8 @@ public:
     void setPrecio_unidad(double);
     int getUnidad_disp();
     void setUnidad_disp(int);
+    int getUnidad_ordenadas();
+    void setUnidad_ordenadas(int);
     int getNivel_reorden();
     void setNivel_reorden(int);
     bool getDiscontinuado();

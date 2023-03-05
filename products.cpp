@@ -2,9 +2,10 @@
 
 
 Products::Products(int id, string nom, int suppID, int catID, string cantUnd,
-                   double precioUnd, int undDisp, int nivRe, bool desc):
+                   double precioUnd, int undDisp, int undOrd,int nivRe, bool desc):
     id(id), nom_producto(nom), supp_id(suppID), cat_id(catID), cant_x_unidad(cantUnd),
-    precio_unidad(precioUnd), unidad_disp(undDisp), nivel_reorden(nivRe), descontinuado(desc){}
+    precio_unidad(precioUnd), unidad_disp(undDisp), unidad_ordenadas(undOrd), nivel_reorden(nivRe),
+    descontinuado(desc){}
 
 int Products::getId() {
     return id;
@@ -62,6 +63,14 @@ int Products::getUnidad_disp() {
 void Products::setUnidad_disp(int newUnidad_disp)
 {
     this->unidad_disp = newUnidad_disp;
+}
+
+int Products::getUnidad_ordenadas(){
+    return unidad_ordenadas;
+}
+
+void Products::setUnidad_ordenadas(int undOrd){
+    this->unidad_ordenadas = undOrd;
 }
 
 int Products::getNivel_reorden() {
