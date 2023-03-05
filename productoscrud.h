@@ -22,7 +22,7 @@ using namespace std;
 
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "12345"
 #define DATABASE_NAME "northwind"
 
 #include <QDialog>
@@ -43,6 +43,10 @@ private slots:
     void on_PB_CrearProd_clicked();
 
     void on_A_PB_Actualizar_clicked();
+
+    void on_PB_MostrarProd_clicked();
+
+    void on_PB_DescProd_clicked();
 
 private:
     Ui::productosCRUD *ui;

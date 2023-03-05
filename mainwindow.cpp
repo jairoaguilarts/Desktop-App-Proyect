@@ -26,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent)
     database.setDatabaseName(DATABASE_NAME);
     database.open();
     //Prueba para ver si se conecto la base de datos
-    /*if(database.open()){
+    if(database.open()){
         QMessageBox::information(this, "CONEXION A POSTGRESQL", "Conexion establecida correctamente");
     }
     else{
          QMessageBox::information(this, "CONEXION A POSTGRESQL", "No se ha establecido conexion");
-    }*/
+    }
     ui->setupUi(this);
 }
 
