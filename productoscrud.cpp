@@ -137,6 +137,8 @@ void mostrar_productos(QTableWidget *resultados){
         resultados->setItem(row, 4, new QTableWidgetItem(QString::number(query.value(4).toInt())));
         row++;
     }
+    resultados->resizeColumnsToContents();
+    resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void desc_producto(QTableWidget* resultados, QString& id_producto){

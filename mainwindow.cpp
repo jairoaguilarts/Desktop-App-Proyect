@@ -26,12 +26,12 @@ MainWindow::MainWindow(QWidget *parent)
     database.setDatabaseName(DATABASE_NAME);
     database.open();
     //Prueba para ver si se conecto la base de datos
-    if(database.open()){
+    /*if(database.open()){
         QMessageBox::information(this, "CONEXION A POSTGRESQL", "Conexion establecida correctamente");
     }
     else{
          QMessageBox::information(this, "CONEXION A POSTGRESQL", "No se ha establecido conexion");
-    }
+    }*/
     ui->setupUi(this);
 }
 
@@ -459,7 +459,7 @@ void MainWindow::on_PB_reporteCategoria_clicked()
 
 void MainWindow::on_PB_CRUDProductos_clicked()
 {
-    productosCRUD * pWindow = new productosCRUD();
+    productosCRUD *pWindow = new productosCRUD();
     pWindow->setModal(true);
     pWindow->show();
 }
