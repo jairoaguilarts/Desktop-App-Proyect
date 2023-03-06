@@ -374,8 +374,8 @@ void MainWindow::on_emitirorden_clicked()
 
     y += 400;
     float sub_total = 0;
+    float descuentoNum = 0;
     float total = 0;
-    float total1 = 0;
     // Ejecutar la consulta y verificar si hay errores
     if (query2.exec()) {
         while(query2.next()){
@@ -385,12 +385,12 @@ void MainWindow::on_emitirorden_clicked()
             cantidad = query2.value("quantity").toString();
             descuento = query2.value("discount").toString();
             double precioUnitarioNum =precioUnitario.toDouble() ;
-            int cantidadNum = cantidad.toInt();
-            float descuento2 = descuento.toDouble();
 
-            sub_total +=  cantidadNum * precioUnitarioNum;
-            total += sub_total * descuento2;
-            total1 += sub_total - total;
+            float totalDetalle = (cantidad.toInt()) * precioUnitarioNum;
+
+            sub_total += totalDetalle;
+            descuentoNum = totalDetalle * (descuento.toDouble());
+            total += totalDetalle - descuentoNum;
 
             // Dibujar los textos con la información de la orden
             painter.setFont(QFont("Times New Roman", 12, QFont::Normal));
@@ -405,7 +405,7 @@ void MainWindow::on_emitirorden_clicked()
         }
         painter.drawText(x, y,QString("Subtotal: .....  $%1").arg(sub_total));
         y += 200;
-        painter.drawText(x, y, QString("Total: .......  $%1").arg(total1));
+        painter.drawText(x, y, QString("Total: .......  $%1").arg(total));
         y += 500;
         x+=600;
         painter.drawText(x, y, "||||||||||||||||||||||||||||||||||" );
