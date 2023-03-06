@@ -1,10 +1,18 @@
 #include "productoscrud.h"
 #include "ui_productoscrud.h"
 
+int id_Producto();
+
 productosCRUD::productosCRUD(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::productosCRUD)
 {
+    database = QSqlDatabase::addDatabase("QPSQL");
+    database.setHostName(HOST_NAME);
+    database.setUserName(USER_NAME);
+    database.setPassword(PASSWORD);
+    database.setDatabaseName(DATABASE_NAME);
+    database.open();
     ui->setupUi(this);
 }
 
@@ -15,7 +23,7 @@ productosCRUD::~productosCRUD()
 
 void productosCRUD::on_PB_CrearProd_clicked()
 {
-    QString id = ui->LE_C_ID->text();
+    int id = id_Producto();
     QString nombre = ui->LE_C_Nom->text();
     QString supp_id = ui->LE_C_IDSupp->text();
     QString cat_id = ui->LE_C_IDCat->text();
@@ -50,10 +58,9 @@ void productosCRUD::on_PB_CrearProd_clicked()
         qDebug() << "Error: " << query.lastError().text();
     } else {
         QMessageBox::information(this, "INFO PRODUCTO", "El producto ha sido creado exitosamente");
-        Products *producto = new Products(id.toInt(), nombre.toStdString(), supp_id.toInt(),
+        Products *producto = new Products(id, nombre.toStdString(), supp_id.toInt(),
                                           cat_id.toInt(), cantXund.toStdString(), preXund.toDouble(),und_Disp.toInt(),
                                           und_Ord.toInt(),niv_Reorden.toInt(), descontinuado.toInt());
-        ui->LE_C_ID->clear();
         ui->LE_C_Nom->clear();
         ui->LE_C_IDSupp->clear();
         ui->LE_C_IDCat->clear();
@@ -163,5 +170,14 @@ void productosCRUD::on_PB_DescProd_clicked()
     QString id_producto = ui->LE_E_ID->text();
     QTableWidget* resultados = ui->tabla_productos;
     desc_producto(resultados, id_producto);
+}
+
+int id_Producto(){
+    QSqlQuery query;
+    query.prepare("SELECT MAX(product_id) FROM products");
+    query.exec();
+    query.first();
+    int prod_ID = query.value(0).toInt();
+    return prod_ID + 1;
 }
 
