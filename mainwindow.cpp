@@ -432,6 +432,7 @@ void MainWindow::on_emitirorden_clicked()
 void MainWindow::on_PB_reporteCliente_clicked()
 {
     Reportes *reporte = new Reportes();
+    reporte->setWindowTitle("Reporte Cliente");
     reporte->setCliente(true);
     reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del cliente");
     reporte->setModal(true);
@@ -442,6 +443,7 @@ void MainWindow::on_PB_reporteCliente_clicked()
 void MainWindow::on_PB_reporteProveedor_clicked()
 {
     Reportes *reporte = new Reportes();
+    reporte->setWindowTitle("Reporte Proveedor");
     reporte->setProveedor(true);
     reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del proveedor");
     reporte->setModal(true);
@@ -452,6 +454,7 @@ void MainWindow::on_PB_reporteProveedor_clicked()
 void MainWindow::on_PB_reporteCategoria_clicked()
 {
     Reportes *reporte = new Reportes();
+    reporte->setWindowTitle("Reporte Categoria");
     reporte->setCategoria(true);
     reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID de la categoria");
     reporte->setModal(true);
@@ -462,6 +465,7 @@ void MainWindow::on_PB_reporteCategoria_clicked()
 void MainWindow::on_PB_CRUDProductos_clicked()
 {
     productosCRUD *pWindow = new productosCRUD();
+    pWindow->setWindowTitle("CRUD Productos");
     pWindow->setModal(true);
     pWindow->show();
 }
