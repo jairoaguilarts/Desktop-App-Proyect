@@ -22,7 +22,7 @@ using namespace std;
 
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "12345"
 #define DATABASE_NAME "northwind"
 
 #include <QDialog>

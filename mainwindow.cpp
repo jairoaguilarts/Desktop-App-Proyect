@@ -130,36 +130,62 @@ void MainWindow::on_PB_agregardetalles_clicked()
     //Obtiene los datos de los Line Edits
     QString cantidad = ui->LE_cantidad->text();
     QString descuento = ui->LE_descuento->text();
+    QSqlQuery querycant;
+    int cant;
+    if(querycant.exec(QString("SELECT units_in_stock FROM products WHERE product_id = '%1'").arg(idProducto)) && querycant.next()){
+        cant = querycant.value(0).toInt();
+    }
+    else{
+        cant = 0;
+    }
+    /*PROBANDO
+    QString str;
+    QMessageBox::information(this, "PRODUCTO", " "+str.setNum(cant));
+    */
+    if(cantidad.toInt() <= cant){
+        // Verifica que la orden exista en la tabla orders
+        QSqlQuery query2;
+        if (query2.exec(QString("SELECT order_id FROM orders WHERE order_id = '%1'").arg(orderID_flag)) && query2.next()) {
+            //Inserta los datos a order_details
+            QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
+            QSqlQuery query3;
+            query3.prepare(queryString);
+            query3.bindValue(":orderID", orderID_flag);
+            query3.bindValue(":productID", idProducto.toInt());
+            query3.bindValue(":unitPrice", unitPrice.toDouble());
+            query3.bindValue(":quantity", cantidad.toInt());
+            query3.bindValue(":discount", descuento.toDouble());
 
-    // Verifica que la orden exista en la tabla orders
-    QSqlQuery query2;
-    if (query2.exec(QString("SELECT order_id FROM orders WHERE order_id = '%1'").arg(orderID_flag)) && query2.next()) {
-        //Inserta los datos a order_details
-        QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
-        QSqlQuery query3;
-        query3.prepare(queryString);
-        query3.bindValue(":orderID", orderID_flag);
-        query3.bindValue(":productID", idProducto.toInt());
-        query3.bindValue(":unitPrice", unitPrice.toDouble());
-        query3.bindValue(":quantity", cantidad.toInt());
-        query3.bindValue(":discount", descuento.toDouble());
-
-        if(!query3.exec()){
-            QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
-            qDebug() << "Error: " << query3.lastError().text();
+            if(!query3.exec()){
+                QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+                qDebug() << "Error: " << query3.lastError().text();
+            }
+            else{
+                //Instancia de un detalle de orden
+                OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
+                                                             descuento.toDouble());
+                //ACTUALIZA CANT PRODUCTOS
+                int newCant = cant - cantidad.toInt();
+                QString str = "UPDATE products SET units_in_stock = :newCant WHERE product_id = :productID";
+                QSqlQuery queryprod;
+                queryprod.prepare(str);
+                queryprod.bindValue(":newCant", newCant);
+                queryprod.bindValue(":productID", idProducto);
+                if(queryprod.exec()){
+                    QMessageBox::information(this, "PRODUCTOS", "Se actualizo la cantidad de productos");
+                }
+                //Limpia los campos de los Line Edits
+                ui->LE_producto->clear();
+                ui->LE_cantidad->clear();
+                ui->LE_descuento->clear();
+            }
+        } else {
+            QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
+            qDebug() << "Error: " << query2.lastError().text();
         }
-        else{
-            //Instancia de un detalle de orden
-            OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
-                                                         descuento.toDouble());
-            //Limpia los campos de los Line Edits
-            ui->LE_producto->clear();
-            ui->LE_cantidad->clear();
-            ui->LE_descuento->clear();
-        }
-    } else {
-        QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
-        qDebug() << "Error: " << query2.lastError().text();
+    }
+    else{
+        QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
     }
 }
 
