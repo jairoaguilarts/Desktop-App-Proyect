@@ -72,6 +72,30 @@ void productosCRUD::on_PB_CrearProd_clicked()
     }
 }
 
+void mostrar_productos(QTableWidget *resultados){
+    QSqlQuery query;
+    query.prepare("SELECT product_id, product_name, unit_price, units_in_stock, discontinued FROM products WHERE discontinued = 0 order by product_id");
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        return;
+    }
+    resultados->clear();
+    resultados->setRowCount(0);
+    resultados->setColumnCount(5);
+    resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "Precio", "Inventario", "Descontinuado"});
+    int row = 0;
+    while (query.next()) {
+        resultados->insertRow(row);
+        resultados->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
+        resultados->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));
+        resultados->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
+        resultados->setItem(row, 3, new QTableWidgetItem(QString::number(query.value(3).toInt())));
+        resultados->setItem(row, 4, new QTableWidgetItem(QString::number(query.value(4).toInt())));
+        row++;
+    }
+    resultados->resizeColumnsToContents();
+    resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
 
 void productosCRUD::on_A_PB_Actualizar_clicked()
 {
@@ -121,31 +145,8 @@ void productosCRUD::on_A_PB_Actualizar_clicked()
         ui->A_LE_PrexUnd->clear();
         ui->A_LE_UndDis->clear();
     }
-}
-
-void mostrar_productos(QTableWidget *resultados){
-    QSqlQuery query;
-    query.prepare("SELECT product_id, product_name, unit_price, units_in_stock, discontinued FROM products WHERE discontinued = 0 order by product_id");
-    if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        return;
-    }
-    resultados->clear();
-        resultados->setRowCount(0);
-    resultados->setColumnCount(5);
-    resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "Precio", "Inventario", "Descontinuado"});
-    int row = 0;
-    while (query.next()) {
-        resultados->insertRow(row);
-        resultados->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
-        resultados->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));
-        resultados->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
-        resultados->setItem(row, 3, new QTableWidgetItem(QString::number(query.value(3).toInt())));
-        resultados->setItem(row, 4, new QTableWidgetItem(QString::number(query.value(4).toInt())));
-        row++;
-    }
-    resultados->resizeColumnsToContents();
-    resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    QTableWidget* resultados = ui->tabla_productos;
+    mostrar_productos(resultados);
 }
 
 void desc_producto(QTableWidget* resultados, QString& id_producto){
