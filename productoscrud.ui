@@ -374,7 +374,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>Exterminar &gt;:U</string>
+    <string>Eliminar</string>
    </property>
    <widget class="QPushButton" name="PB_DescProd">
     <property name="geometry">

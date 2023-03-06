@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -250,9 +250,9 @@
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>30</x>
         <y>200</y>
-        <width>381</width>
+        <width>511</width>
         <height>191</height>
        </rect>
       </property>
@@ -262,9 +262,9 @@
       <widget class="QTableWidget" name="tabla_resultados">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>5</x>
          <y>60</y>
-         <width>256</width>
+         <width>501</width>
          <height>81</height>
         </rect>
        </property>
@@ -272,9 +272,9 @@
       <widget class="QPushButton" name="PB_Buscarproducto">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>190</x>
          <y>150</y>
-         <width>121</width>
+         <width>141</width>
          <height>29</height>
         </rect>
        </property>
@@ -298,9 +298,9 @@
       <widget class="QLineEdit" name="LE_productoDB">
        <property name="geometry">
         <rect>
-         <x>240</x>
+         <x>232</x>
          <y>30</y>
-         <width>113</width>
+         <width>271</width>
          <height>25</height>
         </rect>
        </property>

@@ -169,6 +169,8 @@ void MainWindow::on_PB_Buscarproducto_clicked()
         QString IDproducto2 = ui->LE_productoDB->text();
         QTableWidget* tabla_resultados2 = ui->tabla_resultados;
         buscar_productos_por_nombre(IDproducto2, tabla_resultados2);
+        ui->tabla_resultados->resizeColumnsToContents();
+        ui->tabla_resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 
