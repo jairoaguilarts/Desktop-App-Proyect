@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "reportes.h"
 #include "ui_reportes.h"
 #include <iostream>
 #include <QPrinter>
