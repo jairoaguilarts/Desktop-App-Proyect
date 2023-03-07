@@ -16,19 +16,16 @@ SOURCES += \
     mainwindow.cpp \
     order.cpp \
     orderdetails.cpp \
-    products.cpp \
-    reportes.cpp
+    products.cpp
 
 HEADERS += \
     mainwindow.h \
     order.h \
     orderdetails.h \
-    products.h \
-    reportes.h
+    products.h
 
 FORMS += \
-    mainwindow.ui \
-    reportes.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
