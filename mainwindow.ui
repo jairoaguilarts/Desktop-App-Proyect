@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>831</width>
+      <width>821</width>
       <height>651</height>
      </rect>
     </property>
@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -601,50 +601,73 @@
      <attribute name="title">
       <string>Generar Reportes</string>
      </attribute>
-     <widget class="QGroupBox" name="groupBox_9">
+     <widget class="QGroupBox" name="groupBox_8">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>10</y>
-        <width>521</width>
-        <height>241</height>
+        <width>381</width>
+        <height>321</height>
        </rect>
       </property>
       <property name="title">
-       <string>Reportes</string>
+       <string>Reporte Clientes</string>
       </property>
-      <widget class="QWidget" name="verticalLayoutWidget_11">
+      <widget class="QTableView" name="TB_ReporteClientes">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>40</y>
-         <width>471</width>
-         <height>181</height>
+         <x>10</x>
+         <y>30</y>
+         <width>361</width>
+         <height>281</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <item>
-         <widget class="QPushButton" name="PB_reporteCliente">
-          <property name="text">
-           <string>Generar reporte para cliente</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="PB_reporteProveedor">
-          <property name="text">
-           <string>Generar reporte para proveedor</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="PB_reporteCategoria">
-          <property name="text">
-           <string>Generar reporte para categoria</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>10</y>
+        <width>391</width>
+        <height>321</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Reporte Proveedores</string>
+      </property>
+      <widget class="QTableView" name="TB_ReporteProveedores">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>371</width>
+         <height>281</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_10">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>340</y>
+        <width>381</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Reporte Categorias</string>
+      </property>
+      <widget class="QTableView" name="TB_ReeporteCategorias">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>361</width>
+         <height>231</height>
+        </rect>
+       </property>
       </widget>
      </widget>
     </widget>

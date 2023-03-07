@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
     ui->tabWidget->removeTab(3);
+    on_tabWidget_currentChanged(2);
 }
 
 MainWindow::~MainWindow()
@@ -737,5 +738,39 @@ void MainWindow::on_PB_Descontinuar_clicked()
 
     QTableWidget* resultados = ui->TV_Productos;
     descontinuarProducto(resultados, id);
+}
+
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    QSqlQueryModel *queryModelCliente = new QSqlQueryModel();
+    queryModelCliente->setQuery("SELECT customers.customer_id, extract(year from orders.order_date) AS Año, "
+                                 "extract(month from orders.order_date) AS Mes, "
+                                 "SUM(order_details.quantity * order_details.unit_price) AS Total "
+                                 "FROM customers JOIN orders ON customers.customer_id = orders.customer_id "
+                                 "JOIN order_details ON orders.order_id = order_details.order_id "
+                                 "GROUP BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date) "
+                                 "ORDER BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date)");
+    ui->TB_ReporteClientes->setModel(queryModelCliente);
+    ui->TB_ReporteClientes->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    QSqlQueryModel *queryModelProveedor = new QSqlQueryModel();
+    queryModelProveedor->setQuery("SELECT s.company_name, EXTRACT(YEAR FROM o.order_date) AS Año, SUM(od.quantity) AS Productos_Vendidos "
+                         "FROM suppliers s "
+                         "JOIN products p ON s.supplier_id = p.supplier_id "
+                         "JOIN order_details od ON p.product_id = od.product_id "
+                         "JOIN orders o ON od.order_id = o.order_id "
+                         "GROUP BY s.company_name, EXTRACT(YEAR FROM o.order_date) "
+                         "ORDER BY s.company_name, EXTRACT(YEAR FROM o.order_date)");
+    ui->TB_ReporteProveedores->setModel(queryModelProveedor);
+    ui->TB_ReporteProveedores->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    QSqlQueryModel *queryModelCategoria = new QSqlQueryModel();
+    queryModelCategoria->setQuery("SELECT c.category_name Nombre_Categoria, COUNT(p.product_id) AS Productos_Totales, SUM(od.quantity) AS Productos_Vendidos "
+                                 "FROM categories c "
+                                 "JOIN products p ON c.category_id = p.category_id "
+                                 "JOIN order_details od ON p.product_id = od.product_id "
+                                 "GROUP BY c.category_name "
+                                 "ORDER BY c.category_name");
+    ui->TB_ReeporteCategorias->setModel(queryModelCategoria);
+    ui->TB_ReeporteCategorias->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 

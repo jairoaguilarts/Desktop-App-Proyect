@@ -57,6 +57,8 @@ private slots:
 
     void on_PB_Descontinuar_clicked();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
