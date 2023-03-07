@@ -44,9 +44,8 @@ void Reportes::on_pushButton_clicked()
                                      "SUM(order_details.quantity * order_details.unit_price) AS Total "
                                      "FROM customers JOIN orders ON customers.customer_id = orders.customer_id "
                                      "JOIN order_details ON orders.order_id = order_details.order_id "
-                                     "WHERE customers.customer_id = '%1' "
                                      "GROUP BY extract(year from orders.order_date), extract(month from orders.order_date) "
-                                     "ORDER BY extract(year from orders.order_date), extract(month from orders.order_date)").arg(id));
+                                     "ORDER BY extract(year from orders.order_date), extract(month from orders.order_date)"));
     } else if(proveedor){
         queryModel->setQuery(QString("SELECT EXTRACT(YEAR FROM o.order_date) AS Año, SUM(od.quantity) AS Productos_Vendidos "
                              "FROM suppliers s "

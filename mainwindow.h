@@ -42,13 +42,7 @@ private slots:
 
     void on_PB_agregardetalles_clicked();
 
-    void on_PB_Buscarproducto_clicked();
-
-    void on_LE_IDCliente_editingFinished();
-
-    void on_LE_IDEmpleado_editingFinished();
-
-    void on_LE_IDAgencia_editingFinished();
+    //void on_PB_Buscarproducto_clicked();
 
     void on_emitirorden_clicked();
 
@@ -67,6 +61,16 @@ private:
     int orderID_flag;
 
     int generarIDOrden();
+
+    void cargarClientes();
+
+    void cargarEmpleados();
+
+    void cargarAgencias();
+
+    void cargarProductos();
+
+    void actualizarTabla();
 
 };
 #endif // MAINWINDOW_H

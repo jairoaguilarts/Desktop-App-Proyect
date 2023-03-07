@@ -11,7 +11,7 @@ using namespace std;
 
 void asignaciones_constantes_fechas();
 void generacion_idOrden();
-void buscar_productos_por_nombre( QString& , QTableWidget* );
+//void buscar_productos_por_nombre( QString& , QTableWidget* );
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,6 +33,11 @@ MainWindow::MainWindow(QWidget *parent)
          QMessageBox::information(this, "CONEXION A POSTGRESQL", "No se ha establecido conexion");
     }*/
     ui->setupUi(this);
+    cargarClientes();
+    cargarEmpleados();
+    cargarAgencias();
+    cargarProductos();
+    ui->tabWidget->removeTab(1);
 }
 
 MainWindow::~MainWindow()
@@ -41,17 +46,99 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::cargarClientes()
+{
+    QSqlQuery query;
+    query.prepare("select contact_name from customers");
+    if(query.exec()){
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Clientes->addItems(items);
+    }
+}
+
+void MainWindow::cargarEmpleados()
+{
+    QSqlQuery query;
+    query.prepare("select first_name, last_name from employees");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString() + " " + query.value(1).toString());
+        }
+        ui->CB_Empleado->addItems(items);
+    }
+}
+
+void MainWindow::cargarAgencias()
+{
+    QSqlQuery query;
+    query.prepare("select company_name from shippers");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Agencia->addItems(items);
+    }
+}
+
+void MainWindow::cargarProductos()
+{
+    QSqlQuery query;
+    query.prepare("select product_name from products");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Productos->addItems(items);
+    }
+}
 
 void MainWindow::on_PB_CrearOrden_clicked()
 {
-    //Obtiene los datos de los Line Edits
     int ordenID = this->generarIDOrden();
-    QString idCliente = ui->LE_IDCliente->text();
-    QString idEmpleado = ui->LE_IDEmpleado->text();
+
+    QString nombreCliente = ui->CB_Clientes->currentText();
+    QString idCliente;
+    //Obtiende el ID del customer
+    QSqlQuery queryCliente;
+    queryCliente.prepare("SELECT customer_id FROM customers WHERE contact_name = ?");
+    queryCliente.addBindValue(nombreCliente);
+    if(queryCliente.exec() && queryCliente.next()){
+        idCliente = queryCliente.value(0).toString();
+    }
+
+    QString nombreEmpleado = ui->CB_Empleado->currentText();
+    QStringList nombreSeparado = nombreEmpleado.split(" ");
+    QString idEmpleado;
+    //Obtiene el ID del employee
+    QSqlQuery queryEmpleado;
+    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryEmpleado.addBindValue(nombreSeparado.first());
+    queryEmpleado.addBindValue(nombreSeparado.last());
+    if(queryEmpleado.exec() && queryEmpleado.next()){
+        idEmpleado = queryEmpleado.value(0).toString();
+    }
+
+    QString nombreAgencia = ui->CB_Agencia->currentText();
+    QString idAgencia;
+    //Obtiene el shipper_id de shippers
+    QSqlQuery queryAgencia;
+    queryAgencia.prepare("SELECT shipper_id FROM shippers WHERE company_name = ?");
+    queryAgencia.addBindValue(nombreAgencia);
+    if(queryAgencia.exec() && queryAgencia.next()){
+        idAgencia = queryAgencia.value(0).toString();
+    }
+
+    //Crea las fechas
     QDate fechaOrden = QDate::currentDate();
     QDate fechaRequerida = fechaOrden.addDays(2);
-    QDate fechaEnviada; //null
-    QString idAgencia = ui->LE_IDAgencia->text();
+
+    //Obtiene los datos de los Line Edits
     QString peso = ui->LE_Peso->text();
     QString nombreBarco = ui->LE_NombreBarco->text();
     QString direccionEnvio = ui->LE_DireccionEnvio->text();
@@ -87,9 +174,6 @@ void MainWindow::on_PB_CrearOrden_clicked()
                                  idAgencia.toInt(), peso.toDouble(),nombreBarco.toStdString(), direccionEnvio.toStdString(), ciudad.toStdString(), region.toStdString(),
                                  codigoPostal.toStdString(), pais.toStdString());
         //Limpia los campos de los Line Edits
-        ui->LE_IDCliente->clear();
-        ui->LE_IDEmpleado->clear();
-        ui->LE_IDAgencia->clear();
         ui->LE_Peso->clear();
         ui->LE_NombreBarco->clear();
         ui->LE_DireccionEnvio->clear();
@@ -97,9 +181,6 @@ void MainWindow::on_PB_CrearOrden_clicked()
         ui->LE_RegionEnvio->clear();
         ui->LE_CodigoPostal->clear();
         ui->LE_Pais->clear();
-        ui->nombreCliente->setText("");
-        ui->nombreEmpleado->setText("");
-        ui->nombreAgencia->setText("");
     }
 
 }
@@ -114,11 +195,27 @@ int MainWindow::generarIDOrden()
     return orderID + 1;
 }
 
+void MainWindow::actualizarTabla()
+{
+    QSqlQueryModel *queryModel = new QSqlQueryModel();
+    queryModel->setQuery(QString("SELECT product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
+    ui->TV_detalles->setModel(queryModel);
+    ui->TV_detalles->resizeColumnsToContents();
+    ui->TV_detalles->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
 
 void MainWindow::on_PB_agregardetalles_clicked()
 {
+    QString nombreProducto = ui->CB_Productos->currentText();
+    QString idProducto;
+    //Obtiene el produc_id de products
+    QSqlQuery queryProducto;
+    queryProducto.prepare("SELECT product_id FROM products WHERE product_name = ?");
+    queryProducto.addBindValue(nombreProducto);
+    if(queryProducto.exec() && queryProducto.next()){
+        idProducto = queryProducto.value(0).toString();
+    }
 
-    QString idProducto = ui->LE_producto->text();
     QString unitPrice;
     QSqlQuery query1;
     if (query1.exec(QString("SELECT unit_price FROM products WHERE product_id = '%1'").arg(idProducto)) && query1.next()) {
@@ -138,10 +235,6 @@ void MainWindow::on_PB_agregardetalles_clicked()
     else{
         cant = 0;
     }
-    /*PROBANDO
-    QString str;
-    QMessageBox::information(this, "PRODUCTO", " "+str.setNum(cant));
-    */
     if(cantidad.toInt() <= cant){
         // Verifica que la orden exista en la tabla orders
         QSqlQuery query2;
@@ -175,7 +268,6 @@ void MainWindow::on_PB_agregardetalles_clicked()
                     QMessageBox::information(this, "PRODUCTOS", "Se actualizo la cantidad de productos");
                 }
                 //Limpia los campos de los Line Edits
-                ui->LE_producto->clear();
                 ui->LE_cantidad->clear();
                 ui->LE_descuento->clear();
             }
@@ -187,10 +279,11 @@ void MainWindow::on_PB_agregardetalles_clicked()
     else{
         QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
     }
+    actualizarTabla();
 }
 
 
-void MainWindow::on_PB_Buscarproducto_clicked()
+/*void MainWindow::on_PB_Buscarproducto_clicked()
 {
         QString IDproducto2 = ui->LE_productoDB->text();
         QTableWidget* tabla_resultados2 = ui->tabla_resultados;
@@ -229,49 +322,7 @@ void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_
     if (row == 0) {
         tabla_resultados->setItem(0, 0, new QTableWidgetItem("No se encontraron productos con el nombre " + nombre_producto));
     }
-}
-
-
-void MainWindow::on_LE_IDCliente_editingFinished()
-{
-    QString idCliente = ui->LE_IDCliente->text();
-    QString nombre;
-    QSqlQuery query;
-    if (query.exec(QString("SELECT contact_name FROM customers WHERE customer_id = '%1'").arg(idCliente)) && query.next()) {
-        nombre = query.value(0).toString();
-    } else {
-        nombre = "Cliente no encontrado";
-    }
-    ui->nombreCliente->setText(nombre);
-}
-
-
-void MainWindow::on_LE_IDEmpleado_editingFinished()
-{
-    QString idEmpleado = ui->LE_IDEmpleado->text();
-    QString nombre;
-    QSqlQuery query;
-    if (query.exec(QString("SELECT first_name, last_name FROM employees WHERE employee_id = '%1'").arg(idEmpleado)) && query.next()) {
-        nombre = query.value(0).toString() + " " + query.value(1).toString();
-    } else {
-        nombre = "Empleado no encontrado";
-    }
-    ui->nombreEmpleado->setText(nombre);
-}
-
-
-void MainWindow::on_LE_IDAgencia_editingFinished()
-{
-    QString idAgencia = ui->LE_IDAgencia->text();
-    QString nombre;
-    QSqlQuery query;
-    if (query.exec(QString("SELECT company_name FROM shippers WHERE shipper_id = '%1'").arg(idAgencia)) && query.next()) {
-        nombre = query.value(0).toString();
-    } else {
-        nombre = "Agencia no encontrada";
-    }
-    ui->nombreAgencia->setText(nombre);
-}
+}*/
 
 void MainWindow::on_emitirorden_clicked()
 {
@@ -495,4 +546,3 @@ void MainWindow::on_PB_CRUDProductos_clicked()
     pWindow->setModal(true);
     pWindow->show();
 }
-
