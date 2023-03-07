@@ -13,11 +13,12 @@
 #include <vector>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlQueryModel>
 #include <QSqlError>
 #include <QTableWidget>
 #include <QRandomGenerator>
-#include "order.h"
-#include "productoscrud.h"
+#include <QPrinter>
+#include <QPainter>
 
 //Cambiar
 #define HOST_NAME "localhost"
