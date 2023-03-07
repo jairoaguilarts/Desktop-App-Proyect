@@ -181,4 +181,3 @@ int id_Producto(){
     int prod_ID = query.value(0).toInt();
     return prod_ID + 1;
 }
-

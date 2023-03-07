@@ -435,6 +435,42 @@
      <string>Mostrar Productos</string>
     </property>
    </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>691</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Visualizar</string>
+    </property>
+    <widget class="QTableWidget" name="tabla_productos_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>691</width>
+       <height>141</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="PB_MostrarProd_2">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>160</y>
+       <width>171</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mostrar Productos</string>
+     </property>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <resources/>

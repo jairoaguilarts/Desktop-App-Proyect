@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "orderdetails.h"
 #include "reportes.h"
 #include "ui_reportes.h"
 #include <iostream>
@@ -37,7 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     cargarEmpleados();
     cargarAgencias();
     cargarProductos();
-    ui->tabWidget->removeTab(1);
+    cargarProveedores();
+    cargarCategorias();
+    ui->CB_Descontinuado->addItem("Si");
+    ui->CB_Descontinuado->addItem("No");
+    ui->tabWidget->removeTab(3);
 }
 
 MainWindow::~MainWindow()
@@ -95,6 +98,34 @@ void MainWindow::cargarProductos()
             items.append(query.value(0).toString());
         }
         ui->CB_Productos->addItems(items);
+        ui->CB_Productos_2->addItems(items);
+        ui->CB_Productos_3->addItems(items);
+    }
+}
+
+void MainWindow::cargarProveedores()
+{
+    QSqlQuery query;
+    query.prepare("select company_name from suppliers");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Proveedor->addItems(items);
+    }
+}
+
+void MainWindow::cargarCategorias()
+{
+    QSqlQuery query;
+    query.prepare("select category_name from categories");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Categoria->addItems(items);
     }
 }
 
@@ -170,9 +201,9 @@ void MainWindow::on_PB_CrearOrden_clicked()
     } else {
         orderID_flag = ordenID;
         //Instancia de una orden
-        Order *order = new Order(ordenID, idCliente.toStdString(), idEmpleado.toStdString(), (fechaOrden.toString()).toStdString(), (fechaRequerida.toString()).toStdString(),
+        /*Order *order = new Order(ordenID, idCliente.toStdString(), idEmpleado.toStdString(), (fechaOrden.toString()).toStdString(), (fechaRequerida.toString()).toStdString(),
                                  idAgencia.toInt(), peso.toDouble(),nombreBarco.toStdString(), direccionEnvio.toStdString(), ciudad.toStdString(), region.toStdString(),
-                                 codigoPostal.toStdString(), pais.toStdString());
+                                 codigoPostal.toStdString(), pais.toStdString());*/
         //Limpia los campos de los Line Edits
         ui->LE_Peso->clear();
         ui->LE_NombreBarco->clear();
@@ -255,8 +286,8 @@ void MainWindow::on_PB_agregardetalles_clicked()
             }
             else{
                 //Instancia de un detalle de orden
-                OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
-                                                             descuento.toDouble());
+                /*OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
+                                                             descuento.toDouble());*/
                 //ACTUALIZA CANT PRODUCTOS
                 int newCant = cant - cantidad.toInt();
                 QString str = "UPDATE products SET units_in_stock = :newCant WHERE product_id = :productID";
@@ -506,43 +537,205 @@ void MainWindow::on_emitirorden_clicked()
     QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
 }
 
-void MainWindow::on_PB_reporteCliente_clicked()
+int MainWindow::generarIDProducto(){
+    QSqlQuery query;
+    query.prepare("SELECT MAX(product_id) FROM products");
+    query.exec();
+    query.first();
+    int prod_ID = query.value(0).toInt();
+    return prod_ID + 1;
+}
+
+void MainWindow::on_PB_CrearProducto_clicked()
 {
-    Reportes *reporte = new Reportes();
-    reporte->setWindowTitle("Reporte Cliente");
-    reporte->setCliente(true);
-    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del cliente");
-    reporte->setModal(true);
-    reporte->show();
+    int id = this->generarIDProducto();
+
+    QString suppName = ui->CB_Proveedor->currentText();
+    QString supp_id;
+    //Obtiene el supplier_id de suppliers
+    QSqlQuery querySupplier;
+    querySupplier.prepare("SELECT supplier_id FROM suppliers WHERE company_name = ?");
+    querySupplier.addBindValue(suppName);
+    if(querySupplier.exec() && querySupplier.next()){
+        supp_id = querySupplier.value(0).toString();
+    }
+
+    QString catName = ui->CB_Categoria->currentText();
+    QString cat_id;
+    //Obtiene el category_id de categories
+    QSqlQuery queryCategory;
+    queryCategory.prepare("SELECT category_id FROM categories WHERE category_name = ?");
+    queryCategory.addBindValue(catName);
+    if(queryCategory.exec() && queryCategory.next()){
+        cat_id = queryCategory.value(0).toString();
+    }
+
+    QString descontinuado;
+    if(ui->CB_Descontinuado->currentIndex() == 0)
+        descontinuado = "1";
+    else
+        descontinuado = "0";
+
+    //Obtiene los datos de los line edits
+    QString nombre = ui->LE_P_Nom->text();
+    QString cantXund = ui->LE_P_Cant->text();
+    QString preXund = ui->LE_P_Precio->text();
+    QString und_Disp = ui->LE_P_Disponibles->text();
+    QString und_Ord = ui->LE_P_Ordenadas->text();
+    QString niv_Reorden = ui->LE_P_Reorden->text();
+
+
+
+    QString queryString = "INSERT INTO products (product_id, product_name, supplier_id, category_id, quantity_per_unit, unit_price, units_in_stock, units_on_order, reorder_level, discontinued) "
+                          "VALUES (:ID, :nombre, :suppID, :catID, :cantUnd, :preUnd, :undDis, :undOrd, :nivReorden, :descontinuado)";
+    QSqlQuery query;
+    query.prepare(queryString);
+    query.bindValue(":ID", id);
+    query.bindValue(":nombre", nombre);
+    query.bindValue(":suppID", supp_id);
+    query.bindValue(":catID", cat_id);
+    query.bindValue(":cantUnd", cantXund);
+    query.bindValue(":preUnd", preXund);
+    query.bindValue(":undDis", und_Disp);
+    query.bindValue(":undOrd", und_Ord);
+    query.bindValue(":nivReorden", niv_Reorden);
+    query.bindValue(":descontinuado", descontinuado);
+
+    if(!query.exec()) {
+        QMessageBox::information(this, "INFO PRODUCTO", "El producto NO pudo ser creado exitosamente");
+        qDebug() << "Error: " << query.lastError().text();
+    } else {
+        QMessageBox::information(this, "INFO PRODUCTO", "El producto ha sido creado exitosamente");
+        /*Products *producto = new Products(id, nombre.toStdString(), supp_id.toInt(),
+                                          cat_id.toInt(), cantXund.toStdString(), preXund.toDouble(),und_Disp.toInt(),
+                                          und_Ord.toInt(),niv_Reorden.toInt(), descontinuado.toInt());*/
+        ui->LE_P_Nom->clear();
+        ui->LE_P_Cant->clear();
+        ui->LE_P_Precio->clear();
+        ui->LE_P_Disponibles->clear();
+        ui->LE_P_Ordenadas->clear();
+        ui->LE_P_Reorden->clear();
+    }
+    cargarProductos();
+    mostrarProductos(ui->TV_Productos);
 }
 
 
-void MainWindow::on_PB_reporteProveedor_clicked()
+void MainWindow::on_PB_ActualizarProducto_clicked()
 {
-    Reportes *reporte = new Reportes();
-    reporte->setWindowTitle("Reporte Proveedor");
-    reporte->setProveedor(true);
-    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID del proveedor");
-    reporte->setModal(true);
-    reporte->show();
+    QString nombreProducto = ui->CB_Productos_2->currentText();
+    QString id;
+    //Obtiene el product_id de products
+    QSqlQuery queryProduct;
+    queryProduct.prepare("SELECT product_id FROM products WHERE product_name = ?");
+    queryProduct.addBindValue(nombreProducto);
+    if(queryProduct.exec() && queryProduct.next()){
+        id = queryProduct.value(0).toString();
+    }
+
+    QString precXund = ui->LE_A_Precio->text();
+    QString undDisp = ui->LE_A_Disponibles->text();
+
+    QSqlQuery query2;
+
+    if(undDisp == "" && precXund == "")
+        QMessageBox::information(this, "INFO PRODUCTO", "Informacion Incompleta!");
+    else if(undDisp == ""){
+        QString queryString = "UPDATE products "
+                              "SET unit_price = :precUnd "
+                              "WHERE product_id = :prodID";
+
+        query2.prepare(queryString);
+        query2.bindValue(":precUnd", precXund);
+        query2.bindValue(":prodID", id);
+    }
+    else if(precXund == ""){
+        QString queryString = "UPDATE products "
+                              "SET units_in_stock = :undDisp "
+                              "WHERE product_id = :prodID";
+
+        query2.prepare(queryString);
+        query2.bindValue(":undDisp", undDisp);
+        query2.bindValue(":prodID", id);
+    }
+    else {
+        QString queryString = "UPDATE products "
+                              "SET units_in_stock = :undDisp, unit_price = :precUnd "
+                              "WHERE product_id = :prodID";
+
+        query2.prepare(queryString);
+        query2.bindValue(":undDisp", undDisp);
+        query2.bindValue(":precUnd", precXund);
+        query2.bindValue(":prodID", id);
+    }
+
+    if(!query2.exec()) {
+        QMessageBox::information(this, "INFO PRODUCTO", "El producto NO pudo ser actualizado exitosamente");
+        qDebug() << "Error: " << query2.lastError().text();
+    } else {
+        QMessageBox::information(this, "INFO PRODUCTO", "El producto fue actualizado exitosamente");
+        ui->LE_A_Precio->clear();
+        ui->LE_A_Disponibles->clear();
+    }
+    QTableWidget* resultados = ui->TV_Productos;
+    mostrarProductos(resultados);
 }
 
-
-void MainWindow::on_PB_reporteCategoria_clicked()
-{
-    Reportes *reporte = new Reportes();
-    reporte->setWindowTitle("Reporte Categoria");
-    reporte->setCategoria(true);
-    reporte->uiReporte->LB_solicitarID->setText("Ingrese el ID de la categoria");
-    reporte->setModal(true);
-    reporte->show();
+void MainWindow::mostrarProductos(QTableWidget *resultados) {
+    QSqlQuery query;
+    query.prepare("SELECT product_id, product_name, unit_price, units_in_stock, discontinued FROM products WHERE discontinued = 0 order by product_id asc");
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        return;
+    }
+    resultados->clear();
+    resultados->setRowCount(0);
+    resultados->setColumnCount(5);
+    resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "Precio", "Inventario", "Descontinuado"});
+    int row = 0;
+    while (query.next()) {
+        resultados->insertRow(row);
+        resultados->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
+        resultados->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));
+        resultados->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
+        resultados->setItem(row, 3, new QTableWidgetItem(QString::number(query.value(3).toInt())));
+        resultados->setItem(row, 4, new QTableWidgetItem(QString::number(query.value(4).toInt())));
+        row++;
+    }
+    resultados->resizeColumnsToContents();
+    resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-
-void MainWindow::on_PB_CRUDProductos_clicked()
+void MainWindow::on_PB_MostrarProd_3_clicked()
 {
-    productosCRUD *pWindow = new productosCRUD();
-    pWindow->setWindowTitle("CRUD Productos");
-    pWindow->setModal(true);
-    pWindow->show();
+    QTableWidget * resultados = ui->TV_Productos;
+    mostrarProductos(resultados);
 }
+
+void MainWindow::descontinuarProducto(QTableWidget* resultados, QString& id_producto){
+    QSqlQuery query;
+    query.prepare("UPDATE products SET discontinued = 1 WHERE product_id = ?");
+    query.addBindValue(id_producto);
+    if (!query.exec()) {
+        qDebug() << query.lastError().text();
+        return;
+    }
+    mostrarProductos(resultados);
+}
+
+void MainWindow::on_PB_Descontinuar_clicked()
+{
+    QString nombreProducto = ui->CB_Productos_3->currentText();
+    QString id;
+    //Obtiene el product_id de products
+    QSqlQuery queryProduct;
+    queryProduct.prepare("SELECT product_id FROM products WHERE product_name = ?");
+    queryProduct.addBindValue(nombreProducto);
+    if(queryProduct.exec() && queryProduct.next()){
+        id = queryProduct.value(0).toString();
+    }
+
+    QTableWidget* resultados = ui->TV_Productos;
+    descontinuarProducto(resultados, id);
+}
+

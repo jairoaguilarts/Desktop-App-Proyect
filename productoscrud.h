@@ -48,6 +48,8 @@ private slots:
 
     void on_PB_DescProd_clicked();
 
+    //void on_PB_MostrarProd_2_clicked();
+
 private:
     Ui::productosCRUD *ui;
     QSqlDatabase database;

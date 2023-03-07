@@ -14,6 +14,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QTableWidget>
 #include <QRandomGenerator>
 #include "order.h"
 #include "productoscrud.h"
@@ -46,13 +47,15 @@ private slots:
 
     void on_emitirorden_clicked();
 
-    void on_PB_reporteCliente_clicked();
+    //void on_PB_CrearProd_clicked();
 
-    void on_PB_reporteProveedor_clicked();
+    void on_PB_CrearProducto_clicked();
 
-    void on_PB_reporteCategoria_clicked();
+    void on_PB_ActualizarProducto_clicked();
 
-    void on_PB_CRUDProductos_clicked();
+    void on_PB_MostrarProd_3_clicked();
+
+    void on_PB_Descontinuar_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -62,6 +65,8 @@ private:
 
     int generarIDOrden();
 
+    int generarIDProducto();
+
     void cargarClientes();
 
     void cargarEmpleados();
@@ -70,7 +75,15 @@ private:
 
     void cargarProductos();
 
+    void cargarProveedores();
+
+    void cargarCategorias();
+
     void actualizarTabla();
+
+    void mostrarProductos(QTableWidget*);
+
+    void descontinuarProducto(QTableWidget*, QString&);
 
 };
 #endif // MAINWINDOW_H
