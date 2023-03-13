@@ -690,7 +690,6 @@ void MainWindow::on_PB_Descontinuar_clicked()
     descontinuarProducto(resultados, id);
 }
 
-
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1){
@@ -727,13 +726,17 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         ui->TB_ReeporteCategorias->setModel(queryModelCategoria);
         ui->TB_ReeporteCategorias->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     } else if (index == 3) {
-        QSqlQueryModel *model = new QSqlQueryModel();
-        model->setQuery("SELECT e.employee_id, e.title_of_courtesy, concat(e.first_name, ' ', e.last_name) AS Nombre, concat(m.first_name, ' ', m.last_name) AS Manager "
-                        "FROM Employees e "
-                        "LEFT JOIN Employees m ON e.reports_to = m.employee_id");
-        ui->TV_Empleados->setModel(model);
-        ui->TV_Empleados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        mostrarEmpleados();
     }
+}
+
+void MainWindow::mostrarEmpleados() {
+    QSqlQueryModel *model = new QSqlQueryModel();
+    model->setQuery("SELECT e.employee_id, e.title_of_courtesy, concat(e.first_name, ' ', e.last_name) AS Nombre, concat(m.first_name, ' ', m.last_name) AS Manager "
+                    "FROM Employees e "
+                    "LEFT JOIN Employees m ON e.reports_to = m.employee_id");
+    ui->TV_Empleados->setModel(model);
+    ui->TV_Empleados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 int MainWindow::generarIDEmpleado() {
@@ -819,6 +822,7 @@ void MainWindow::on_PB_CrearEmpleado_clicked()
             ui->LE_Extension->clear();
             ui->LE_Notas->clear();
             imagePath = "";
+            mostrarEmpleados();
         }
     }
 }
@@ -832,3 +836,100 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString nombre = ui->CB_Empleado_3->currentText();
+    QStringList nombreSeparado = nombre.split(' ');
+    //Obtiene el id del empleado
+    QString idEmpleado;
+    QSqlQuery queryEmpleado;
+    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryEmpleado.addBindValue(nombreSeparado.first());
+    queryEmpleado.addBindValue(nombreSeparado.last());
+    if(queryEmpleado.exec() && queryEmpleado.next()) {
+        idEmpleado = queryEmpleado.value(0).toString();
+    }
+
+    QString photoPath;
+    QSqlQuery query;
+    query.prepare("SELECT photo_path FROM employees WHERE employee_id = ?");
+    query.addBindValue(idEmpleado.toInt());
+    if (query.exec() && query.next()) {
+        photoPath = query.value(0).toString();
+    }
+
+    imagePath = QFileDialog::getOpenFileName(this, "Seleccionar imagen", "/", "Archivos de imagen (*.png *.jpg *.bmp)");
+    if (imagePath.isEmpty()) {
+        imagePath = photoPath;
+    }
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    QString nombre = ui->CB_Empleado_3->currentText();
+    QStringList nombreSeparado = nombre.split(' ');
+    //Obtiene el id del empleado
+    QString idEmpleado;
+    QSqlQuery queryEmpleado;
+    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryEmpleado.addBindValue(nombreSeparado.first());
+    queryEmpleado.addBindValue(nombreSeparado.last());
+    if(queryEmpleado.exec() && queryEmpleado.next()) {
+        idEmpleado = queryEmpleado.value(0).toString();
+    }
+
+    QString direccion = ui->LE_A_Direccion->text();
+    QString ciudad = ui->LE_A_Ciudad->text();
+    QString region = ui->LE_A_Region->text();
+    QString codigoPostal = ui->LE_A_codigoPostal->text();
+    QString pais = ui->LE_A_PaisE->text();
+    QString telefono = ui->LE_A_Telefono->text();
+    QString extension = ui->LE_A_Extension->text();
+
+    //Obtiene los bytes de la imagen
+    QFile imageFile(imagePath);
+    if (!imageFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "Error al abrir el archivo:" << imageFile.errorString();
+    }
+    QByteArray imageData = imageFile.readAll();
+    imageFile.close();
+
+    QString nombreManager = ui->CB_Empleado_2->currentText();
+    QStringList nombreManagerSeparado = nombreManager.split(' ');
+    //Obtiene el manager del empleado
+    QString reportsTo;
+    QSqlQuery queryManager;
+    queryManager.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryManager.addBindValue(nombreManagerSeparado.first());
+    queryManager.addBindValue(nombreManagerSeparado.last());
+    if(queryManager.exec() && queryManager.next()) {
+        reportsTo = queryManager.value(0).toString();
+    }
+
+    QSqlQuery query;
+    query.prepare("UPDATE employees SET address = ?, city = ?, region = ?, postal_code = ?, country = ?, home_phone = ?, extension = ?, photo = ?, reports_to = ?, photo_path = ? WHERE employee_id = ?");
+    query.addBindValue(direccion);
+    query.addBindValue(ciudad);
+    query.addBindValue(region);
+    query.addBindValue(codigoPostal);
+    query.addBindValue(pais);
+    query.addBindValue(telefono);
+    query.addBindValue(extension);
+    query.addBindValue(imageData);
+    query.addBindValue(reportsTo.toInt());
+    query.addBindValue(imagePath);
+    query.addBindValue(idEmpleado);
+    if (!query.exec()) {
+        qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
+    } else {
+        ui->LE_A_Direccion->clear();
+        ui->LE_A_Ciudad->clear();
+        ui->LE_A_Region->clear();
+        ui->LE_A_codigoPostal->clear();
+        ui->LE_A_PaisE->clear();
+        ui->LE_A_Telefono->clear();
+        ui->LE_A_Extension->clear();
+    }
+}

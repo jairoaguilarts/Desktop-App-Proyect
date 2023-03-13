@@ -44,11 +44,7 @@ private slots:
 
     void on_PB_agregardetalles_clicked();
 
-    //void on_PB_Buscarproducto_clicked();
-
     void on_emitirorden_clicked();
-
-    //void on_PB_CrearProd_clicked();
 
     void on_PB_CrearProducto_clicked();
 
@@ -61,6 +57,10 @@ private slots:
     void on_PB_CrearEmpleado_clicked();
 
     void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -91,6 +91,8 @@ private:
     void actualizarTabla();
 
     void mostrarProductos(QTableWidget*);
+
+    void mostrarEmpleados();
 
     void descontinuarProducto(QTableWidget*, QString&);
 
