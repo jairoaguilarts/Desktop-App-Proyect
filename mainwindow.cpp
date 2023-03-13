@@ -959,7 +959,7 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
             actualizarTabla();
         }
     } else {
-
+        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
     }
 }
 
