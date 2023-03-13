@@ -48,7 +48,7 @@ MainWindow::~MainWindow()
 void MainWindow::cargarClientes()
 {
     QSqlQuery query;
-    query.prepare("select contact_name from customers");
+    query.prepare("select contact_name from customers ORDER BY customer_id ASC");
     if(query.exec()){
         QStringList items;
         while (query.next()) {
@@ -61,7 +61,7 @@ void MainWindow::cargarClientes()
 void MainWindow::cargarEmpleados()
 {
     QSqlQuery query;
-    query.prepare("select first_name, last_name from employees");
+    query.prepare("select first_name, last_name from employees ORDER BY employee_id ASC");
     if(query.exec()) {
         QStringList items;
         while (query.next()) {
@@ -90,7 +90,7 @@ void MainWindow::cargarAgencias()
 void MainWindow::cargarProductos()
 {
     QSqlQuery query;
-    query.prepare("select product_name from products");
+    query.prepare("select product_name from products ORDER BY product_id ASC");
     if(query.exec()) {
         QStringList items;
         while (query.next()) {
@@ -118,7 +118,7 @@ void MainWindow::cargarProveedores()
 void MainWindow::cargarCategorias()
 {
     QSqlQuery query;
-    query.prepare("select category_name from categories");
+    query.prepare("select category_name from categories ORDER BY category_id ASC");
     if(query.exec()) {
         QStringList items;
         while (query.next()) {
@@ -734,7 +734,8 @@ void MainWindow::mostrarEmpleados() {
     QSqlQueryModel *model = new QSqlQueryModel();
     model->setQuery("SELECT e.employee_id, e.title_of_courtesy, concat(e.first_name, ' ', e.last_name) AS Nombre, concat(m.first_name, ' ', m.last_name) AS Manager "
                     "FROM Employees e "
-                    "LEFT JOIN Employees m ON e.reports_to = m.employee_id");
+                    "LEFT JOIN Employees m ON e.reports_to = m.employee_id"
+                    "ORDER BY employee_id ASC");
     ui->TV_Empleados->setModel(model);
     ui->TV_Empleados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
@@ -822,6 +823,7 @@ void MainWindow::on_PB_CrearEmpleado_clicked()
             ui->LE_Extension->clear();
             ui->LE_Notas->clear();
             imagePath = "";
+            cargarEmpleados();
             mostrarEmpleados();
         }
     }
