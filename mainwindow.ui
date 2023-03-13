@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -133,7 +133,7 @@
          <x>170</x>
          <y>30</y>
          <width>151</width>
-         <height>341</height>
+         <height>345</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -797,7 +797,7 @@
          <x>180</x>
          <y>30</y>
          <width>160</width>
-         <height>501</height>
+         <height>523</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -881,8 +881,8 @@
       <widget class="QPushButton" name="PB_CrearEmpleado">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>530</y>
+         <x>70</x>
+         <y>520</y>
          <width>100</width>
          <height>32</height>
         </rect>
@@ -1015,7 +1015,7 @@
          <x>210</x>
          <y>30</y>
          <width>160</width>
-         <height>317</height>
+         <height>346</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1058,8 +1058,8 @@
       <widget class="QPushButton" name="pushButton_3">
        <property name="geometry">
         <rect>
-         <x>150</x>
-         <y>360</y>
+         <x>90</x>
+         <y>350</y>
          <width>100</width>
          <height>32</height>
         </rect>
@@ -1067,6 +1067,151 @@
        <property name="text">
         <string>Actualizar</string>
        </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Clientes</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_14">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>371</width>
+        <height>601</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Crear Cliente</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_13">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>155</width>
+         <height>491</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_13">
+        <item>
+         <widget class="QLabel" name="label_53">
+          <property name="text">
+           <string>Nombre de Empresa</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_52">
+          <property name="text">
+           <string>Nombre de Contacto</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_54">
+          <property name="text">
+           <string>Titulo de Contacto</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_55">
+          <property name="text">
+           <string>Direccion </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_56">
+          <property name="text">
+           <string>Ciudad</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_57">
+          <property name="text">
+           <string>Region</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_58">
+          <property name="text">
+           <string>Codigo Postal</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_59">
+          <property name="text">
+           <string>Pais</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_60">
+          <property name="text">
+           <string>Telefono</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_51">
+          <property name="text">
+           <string>Fax</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_14">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>30</y>
+         <width>171</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_14">
+        <item>
+         <widget class="QLineEdit" name="lineEdit"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_2"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_3"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_4"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_5"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_6"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_7"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_8"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_9"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_10"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_11"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>
@@ -1078,7 +1223,7 @@
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
