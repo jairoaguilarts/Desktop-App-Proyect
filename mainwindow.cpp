@@ -938,17 +938,14 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_PB_EliminarDetalle_clicked()
 {
-    // Obtener el modelo de la tabla
+    //Obtener el modelo de la tabla
     QAbstractItemModel *modelo = ui->TV_detalles->model();
-
-    // Obtener la lista de índices seleccionados
     QModelIndexList indicesSeleccionados = ui->TV_detalles->selectionModel()->selectedIndexes();
 
-    // Obtener el dato de la primera columna de la fila seleccionada
+    //Obtener el dato de la primera columna de la fila seleccionada
     if (!indicesSeleccionados.isEmpty()) {
         QModelIndex indice = indicesSeleccionados.first();
         QVariant dato = modelo->data(modelo->index(indice.row(), 0));
-        // El número 0 en el segundo parámetro de modelo->index() representa la columna de la tabla de la que deseas obtener el dato
         if (dato.isValid()) {
             QString valor = dato.toString();
             QSqlQuery query;
@@ -961,5 +958,37 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
     } else {
         QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
     }
+}
+
+void MainWindow::buscarProducto(const QString &patron) {
+    // Ejecutar la consulta SQL para buscar productos que coincidan con el patrón de búsqueda
+    QSqlQuery consulta;
+    consulta.prepare("SELECT * FROM products WHERE product_name LIKE :patron");
+    consulta.bindValue(":patron", "%" + patron + "%");
+    consulta.exec();
+
+    // Recuperar los resultados de la consulta y hacer algo con ellos
+    ui->TW_buscarProducto->setRowCount(0);
+    int fila = 0;
+    while (consulta.next()) {
+        ui->TW_buscarProducto->insertRow(fila);
+        ui->TW_buscarProducto->setItem(fila, 0, new QTableWidgetItem(consulta.value("product_name").toString()));
+        ui->TW_buscarProducto->setItem(fila, 1, new QTableWidgetItem(consulta.value("unit_price").toString()));
+        // Agregar un botón para seleccionar el producto correspondiente
+        QPushButton *botonSeleccionar = new QPushButton("Seleccionar");
+        ui->TW_buscarProducto->setCellWidget(fila, 2, botonSeleccionar);
+        connect(botonSeleccionar, &QPushButton::clicked, [=]() {
+            QString nombreProducto = consulta.value("product_name").toString();
+            double precioProducto = consulta.value("unit_price").toDouble();
+            // Hacer algo con el nombre y precio del producto seleccionado
+        });
+        fila++;
+    }
+}
+
+
+void MainWindow::on_LE_buscarProducto_textChanged(const QString &arg1)
+{
+    buscarProducto(arg1);
 }
 
