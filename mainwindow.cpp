@@ -228,7 +228,7 @@ int MainWindow::generarIDOrden()
 void MainWindow::actualizarTabla()
 {
     QSqlQueryModel *queryModel = new QSqlQueryModel();
-    queryModel->setQuery(QString("SELECT product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
+    queryModel->setQuery(QString("SELECT products.product_id, product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
     ui->TV_detalles->setModel(queryModel);
     ui->TV_detalles->resizeColumnsToContents();
     ui->TV_detalles->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -935,3 +935,31 @@ void MainWindow::on_pushButton_3_clicked()
         ui->LE_A_Extension->clear();
     }
 }
+
+void MainWindow::on_PB_EliminarDetalle_clicked()
+{
+    // Obtener el modelo de la tabla
+    QAbstractItemModel *modelo = ui->TV_detalles->model();
+
+    // Obtener la lista de índices seleccionados
+    QModelIndexList indicesSeleccionados = ui->TV_detalles->selectionModel()->selectedIndexes();
+
+    // Obtener el dato de la primera columna de la fila seleccionada
+    if (!indicesSeleccionados.isEmpty()) {
+        QModelIndex indice = indicesSeleccionados.first();
+        QVariant dato = modelo->data(modelo->index(indice.row(), 0));
+        // El número 0 en el segundo parámetro de modelo->index() representa la columna de la tabla de la que deseas obtener el dato
+        if (dato.isValid()) {
+            QString valor = dato.toString();
+            QSqlQuery query;
+            query.prepare(QString("DELETE FROM order_details WHERE product_id = %1").arg(valor.toInt()));
+            if(!query.exec()) {
+                qDebug() << "No se pudo eliminar el registro";
+            }
+            actualizarTabla();
+        }
+    } else {
+
+    }
+}
+
