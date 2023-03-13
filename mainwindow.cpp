@@ -36,8 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     cargarCategorias();
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
-    ui->tabWidget->removeTab(3);
-    on_tabWidget_currentChanged(2);
+    ui->DE_fechaContratado->setDate(QDate::currentDate());
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +68,9 @@ void MainWindow::cargarEmpleados()
             items.append(query.value(0).toString() + " " + query.value(1).toString());
         }
         ui->CB_Empleado->addItems(items);
+        ui->CB_Empleado_2->addItems(items);
+        ui->CB_Empleado_3->addItems(items);
+        ui->CB_Empleado_4->addItems(items);
     }
 }
 
@@ -309,48 +311,6 @@ void MainWindow::on_PB_agregardetalles_clicked()
     }
     actualizarTabla();
 }
-
-
-/*void MainWindow::on_PB_Buscarproducto_clicked()
-{
-        QString IDproducto2 = ui->LE_productoDB->text();
-        QTableWidget* tabla_resultados2 = ui->tabla_resultados;
-        buscar_productos_por_nombre(IDproducto2, tabla_resultados2);
-        ui->tabla_resultados->resizeColumnsToContents();
-        ui->tabla_resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-}
-
-
-void buscar_productos_por_nombre( QString& nombre_producto, QTableWidget* tabla_resultados)
-{
-    // Realizar consulta SQL
-    QSqlQuery query;
-    query.prepare("SELECT * FROM products WHERE product_name = ?");
-    query.addBindValue(nombre_producto);
-    if (!query.exec()) {
-        qDebug() << query.lastError().text();
-        return;
-    }
-    tabla_resultados->clear();
-       tabla_resultados->setRowCount(0);
-
-    // Mostrar resultados en la tabla
-    tabla_resultados->clear();
-    tabla_resultados->setColumnCount(3);
-    tabla_resultados->setHorizontalHeaderLabels({"ID Producto", "Nombre", "ID Proveedor"});
-    int row = 0;
-    while (query.next()) {
-        tabla_resultados->insertRow(row);
-        tabla_resultados->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
-        tabla_resultados->setItem(row, 1, new QTableWidgetItem(query.value(1).toString()));
-        tabla_resultados->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
-        row++;
-    }
-
-    if (row == 0) {
-        tabla_resultados->setItem(0, 0, new QTableWidgetItem("No se encontraron productos con el nombre " + nombre_producto));
-    }
-}*/
 
 void MainWindow::on_emitirorden_clicked()
 {
@@ -703,12 +663,6 @@ void MainWindow::mostrarProductos(QTableWidget *resultados) {
     resultados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void MainWindow::on_PB_MostrarProd_3_clicked()
-{
-    QTableWidget * resultados = ui->TV_Productos;
-    mostrarProductos(resultados);
-}
-
 void MainWindow::descontinuarProducto(QTableWidget* resultados, QString& id_producto){
     QSqlQuery query;
     query.prepare("UPDATE products SET discontinued = 1 WHERE product_id = ?");
@@ -739,34 +693,142 @@ void MainWindow::on_PB_Descontinuar_clicked()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-    QSqlQueryModel *queryModelCliente = new QSqlQueryModel();
-    queryModelCliente->setQuery("SELECT customers.customer_id, extract(year from orders.order_date) AS Año, "
-                                 "extract(month from orders.order_date) AS Mes, "
-                                 "SUM(order_details.quantity * order_details.unit_price) AS Total "
-                                 "FROM customers JOIN orders ON customers.customer_id = orders.customer_id "
-                                 "JOIN order_details ON orders.order_id = order_details.order_id "
-                                 "GROUP BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date) "
-                                 "ORDER BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date)");
-    ui->TB_ReporteClientes->setModel(queryModelCliente);
-    ui->TB_ReporteClientes->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    QSqlQueryModel *queryModelProveedor = new QSqlQueryModel();
-    queryModelProveedor->setQuery("SELECT s.company_name, EXTRACT(YEAR FROM o.order_date) AS Año, SUM(od.quantity) AS Productos_Vendidos "
-                         "FROM suppliers s "
-                         "JOIN products p ON s.supplier_id = p.supplier_id "
-                         "JOIN order_details od ON p.product_id = od.product_id "
-                         "JOIN orders o ON od.order_id = o.order_id "
-                         "GROUP BY s.company_name, EXTRACT(YEAR FROM o.order_date) "
-                         "ORDER BY s.company_name, EXTRACT(YEAR FROM o.order_date)");
-    ui->TB_ReporteProveedores->setModel(queryModelProveedor);
-    ui->TB_ReporteProveedores->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    QSqlQueryModel *queryModelCategoria = new QSqlQueryModel();
-    queryModelCategoria->setQuery("SELECT c.category_name Nombre_Categoria, COUNT(p.product_id) AS Productos_Totales, SUM(od.quantity) AS Productos_Vendidos "
-                                 "FROM categories c "
-                                 "JOIN products p ON c.category_id = p.category_id "
-                                 "JOIN order_details od ON p.product_id = od.product_id "
-                                 "GROUP BY c.category_name "
-                                 "ORDER BY c.category_name");
-    ui->TB_ReeporteCategorias->setModel(queryModelCategoria);
-    ui->TB_ReeporteCategorias->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    if(index == 1){
+        QTableWidget * resultados = ui->TV_Productos;
+        mostrarProductos(resultados);
+    } else if (index == 2){
+        QSqlQueryModel *queryModelCliente = new QSqlQueryModel();
+        queryModelCliente->setQuery("SELECT customers.customer_id, extract(year from orders.order_date) AS Año, "
+                                     "extract(month from orders.order_date) AS Mes, "
+                                     "SUM(order_details.quantity * order_details.unit_price) AS Total "
+                                     "FROM customers JOIN orders ON customers.customer_id = orders.customer_id "
+                                     "JOIN order_details ON orders.order_id = order_details.order_id "
+                                     "GROUP BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date) "
+                                     "ORDER BY customers.customer_id, extract(year from orders.order_date), extract(month from orders.order_date)");
+        ui->TB_ReporteClientes->setModel(queryModelCliente);
+        ui->TB_ReporteClientes->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        QSqlQueryModel *queryModelProveedor = new QSqlQueryModel();
+        queryModelProveedor->setQuery("SELECT s.company_name, EXTRACT(YEAR FROM o.order_date) AS Año, SUM(od.quantity) AS Productos_Vendidos "
+                             "FROM suppliers s "
+                             "JOIN products p ON s.supplier_id = p.supplier_id "
+                             "JOIN order_details od ON p.product_id = od.product_id "
+                             "JOIN orders o ON od.order_id = o.order_id "
+                             "GROUP BY s.company_name, EXTRACT(YEAR FROM o.order_date) "
+                             "ORDER BY s.company_name, EXTRACT(YEAR FROM o.order_date)");
+        ui->TB_ReporteProveedores->setModel(queryModelProveedor);
+        ui->TB_ReporteProveedores->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        QSqlQueryModel *queryModelCategoria = new QSqlQueryModel();
+        queryModelCategoria->setQuery("SELECT c.category_name Nombre_Categoria, COUNT(p.product_id) AS Productos_Totales, SUM(od.quantity) AS Productos_Vendidos "
+                                     "FROM categories c "
+                                     "JOIN products p ON c.category_id = p.category_id "
+                                     "JOIN order_details od ON p.product_id = od.product_id "
+                                     "GROUP BY c.category_name "
+                                     "ORDER BY c.category_name");
+        ui->TB_ReeporteCategorias->setModel(queryModelCategoria);
+        ui->TB_ReeporteCategorias->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    } else if (index == 3) {
+        QSqlQueryModel *model = new QSqlQueryModel();
+        model->setQuery("SELECT e.employee_id, e.title_of_courtesy, concat(e.first_name, ' ', e.last_name) AS Nombre, concat(m.first_name, ' ', m.last_name) AS Manager "
+                        "FROM Employees e "
+                        "LEFT JOIN Employees m ON e.reports_to = m.employee_id");
+        ui->TV_Empleados->setModel(model);
+        ui->TV_Empleados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    }
+}
+
+int MainWindow::generarIDEmpleado() {
+    QSqlQuery query;
+    query.prepare("SELECT MAX(employee_id) FROM employees");
+    query.exec();
+    query.first();
+    int employee_id = query.value(0).toInt();
+    return employee_id + 1;
+}
+
+void MainWindow::on_PB_CrearEmpleado_clicked()
+{
+    int employeeID = generarIDEmpleado();
+    QString nombre = ui->LE_nombreEmpleado->text();
+    QStringList nombreSeparado = nombre.split(' ');
+    QString titulo = ui->LE_tituloEmpleado->text();
+    QString tituloCortesia = ui->CB_Cortesia->currentText();
+    QDate fechaNacimiento = ui->DE_fechaNacimiento->date();
+    QDate fechaContratado = ui->DE_fechaContratado->date();
+    QString direccion = ui->LE_Direccion->text();
+    QString ciudad = ui->LE_Ciudad->text();
+    QString region = ui->LE_Region->text();
+    QString codigoPostal = ui->LE_codigoPostal->text();
+    QString pais = ui->LE_PaisE->text();
+    QString telefono = ui->LE_Telefono->text();
+    QString extension = ui->LE_Extension->text();
+    QString notas = ui->LE_Notas->text();
+
+    //Obtiene los bytes de la imagen
+    QFile imageFile(imagePath);
+    if (!imageFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "Error al abrir el archivo:" << imageFile.errorString();
+    }
+    QByteArray imageData = imageFile.readAll();
+    imageFile.close();
+
+    QString nombreManager = ui->CB_Empleado_2->currentText();
+    QStringList nombreManagerSeparado = nombreManager.split(' ');
+    //Obtiene el manager del empleado
+    QString reportsTo;
+    QSqlQuery queryEmpleado;
+    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryEmpleado.addBindValue(nombreManagerSeparado.first());
+    queryEmpleado.addBindValue(nombreManagerSeparado.last());
+    if(queryEmpleado.exec() && queryEmpleado.next()) {
+        reportsTo = queryEmpleado.value(0).toString();
+    }
+
+    if(imagePath != "") {
+        QSqlQuery query;
+        query.prepare("INSERT INTO employees (employee_id, last_name, first_name, title, title_of_courtesy, birth_date, hire_date, address, city, region, postal_code, country, home_phone, extension, photo, notes, reports_to, photo_path) "
+                      "VALUES (:employee_id, :last_name, :first_name, :title, :title_of_courtesy, :birth_date, :hire_date, :address, :city, :region, :postal_code, :country, :home_phone, :extension, :photo, :notes, :reports_to, :image_path)");
+        query.bindValue(":employee_id", employeeID);
+        query.bindValue(":last_name", nombreSeparado.last());
+        query.bindValue(":first_name", nombreSeparado.first());
+        query.bindValue(":title", titulo);
+        query.bindValue(":title_of_courtesy", tituloCortesia);
+        query.bindValue(":birth_date", fechaNacimiento.toString("yyyy-MM-dd"));
+        query.bindValue(":hire_date", fechaContratado.toString("yyyy-MM-dd"));
+        query.bindValue(":address", direccion);
+        query.bindValue(":city", ciudad);
+        query.bindValue(":region", region);
+        query.bindValue(":postal_code", codigoPostal);
+        query.bindValue(":country", pais);
+        query.bindValue(":home_phone", telefono);
+        query.bindValue(":extension", extension);
+        query.bindValue(":photo", imageData);
+        query.bindValue(":notes", notas);
+        query.bindValue(":reports_to", reportsTo.toInt());
+        query.bindValue(":image_path", imagePath);
+        if (!query.exec()) {
+            qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
+        } else {
+            ui->LE_nombreEmpleado->clear();
+            ui->LE_tituloEmpleado->clear();
+            ui->LE_Direccion->clear();
+            ui->LE_Ciudad->clear();
+            ui->LE_Region->clear();
+            ui->LE_codigoPostal->clear();
+            ui->LE_PaisE->clear();
+            ui->LE_Telefono->clear();
+            ui->LE_Extension->clear();
+            ui->LE_Notas->clear();
+            imagePath = "";
+        }
+    }
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    imagePath = QFileDialog::getOpenFileName(this, "Seleccionar imagen", "/", "Archivos de imagen (*.png *.jpg *.bmp)");
+    if (imagePath.isEmpty()) {
+        imagePath = "";
+    }
 }
 

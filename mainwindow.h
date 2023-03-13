@@ -54,21 +54,27 @@ private slots:
 
     void on_PB_ActualizarProducto_clicked();
 
-    void on_PB_MostrarProd_3_clicked();
-
     void on_PB_Descontinuar_clicked();
 
     void on_tabWidget_currentChanged(int index);
 
+    void on_PB_CrearEmpleado_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
+
+    QString imagePath = "";
 
     int orderID_flag;
 
     int generarIDOrden();
 
     int generarIDProducto();
+
+    int generarIDEmpleado();
 
     void cargarClientes();
 
