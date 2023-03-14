@@ -121,7 +121,6 @@ void MainWindow::cargarProductos()
         while (query.next()) {
             items.append(query.value(0).toString());
         }
-        ui->CB_Productos->addItems(items);
         ui->CB_Productos_2->addItems(items);
         ui->CB_Productos_3->addItems(items);
     }
@@ -259,7 +258,7 @@ void MainWindow::actualizarTabla()
     ui->TV_detalles->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-void MainWindow::on_PB_agregardetalles_clicked()
+/*void MainWindow::on_PB_agregardetalles_clicked()
 {
     QString nombreProducto = ui->CB_Productos->currentText();
     QString idProducto;
@@ -311,7 +310,7 @@ void MainWindow::on_PB_agregardetalles_clicked()
             else{
                 //Instancia de un detalle de orden
                 /*OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
-                                                             descuento.toDouble());*/
+                                                             descuento.toDouble());
                 //ACTUALIZA CANT PRODUCTOS
                 int newCant = cant - cantidad.toInt();
                 QString str = "UPDATE products SET units_in_stock = :newCant WHERE product_id = :productID";
@@ -335,7 +334,7 @@ void MainWindow::on_PB_agregardetalles_clicked()
         QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
     }
     actualizarTabla();
-}
+}*/
 
 void MainWindow::on_emitirorden_clicked()
 {
@@ -1190,5 +1189,99 @@ void MainWindow::on_LE_BuscarProducto_textChanged(const QString &searchText)
           model->setItem(row, 1, new QStandardItem(name));
           row++;
       }
+}
+
+
+void MainWindow::on_PB_AgregarDetalle_clicked()
+{
+    //Obtener el modelo de la tabla
+    QAbstractItemModel *modelo = ui->TV_BuscarProductos->model();
+    QModelIndexList indicesSeleccionados = ui->TV_BuscarProductos->selectionModel()->selectedIndexes();
+
+    //Obtener el dato de la primera columna de la fila seleccionada
+    if (!indicesSeleccionados.isEmpty()) {
+        QModelIndex indice = indicesSeleccionados.first();
+        QVariant dato = modelo->data(modelo->index(indice.row(), 0));
+        if (dato.isValid()) {
+            QString product_id = dato.toString();
+            bool ok;
+            QString cantidad = QInputDialog::getText(this, "Solicitud de datos", "Ingrese la cantidad del producto", QLineEdit::Normal, QString(), &ok);
+            if (ok && !cantidad.isEmpty()) {
+                QString nombreProducto;
+                //Obtiene el product_name de products
+                QSqlQuery queryProducto;
+                queryProducto.prepare("SELECT product_name FROM products WHERE product_id = ?");
+                queryProducto.addBindValue(product_id.toInt());
+                if(queryProducto.exec() && queryProducto.next()){
+                    nombreProducto = queryProducto.value(0).toString();
+                }
+
+                QString unitPrice;
+                QSqlQuery query1;
+                if (query1.exec(QString("SELECT unit_price FROM products WHERE product_id = '%1'").arg(product_id.toInt())) && query1.next()) {
+                    unitPrice = query1.value(0).toString();
+                } else {
+                    unitPrice = "";
+                }
+
+                //Obtiene los datos de los Line Edits
+                QString descuento = "0.01";
+                QSqlQuery querycant;
+                int cant;
+                if(querycant.exec(QString("SELECT units_in_stock FROM products WHERE product_id = '%1'").arg(product_id.toInt())) && querycant.next()){
+                    cant = querycant.value(0).toInt();
+                }
+                else{
+                    cant = 0;
+                }
+                if(cantidad.toInt() <= cant){
+                    // Verifica que la orden exista en la tabla orders
+                    QSqlQuery query2;
+                    if (query2.exec(QString("SELECT order_id FROM orders WHERE order_id = '%1'").arg(orderID_flag)) && query2.next()) {
+                        //Inserta los datos a order_details
+                        QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
+                        QSqlQuery query3;
+                        query3.prepare(queryString);
+                        query3.bindValue(":orderID", orderID_flag);
+                        query3.bindValue(":productID", product_id.toInt());
+                        query3.bindValue(":unitPrice", unitPrice.toDouble());
+                        query3.bindValue(":quantity", cantidad.toInt());
+                        query3.bindValue(":discount", descuento.toDouble());
+
+                        if(!query3.exec()){
+                            QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
+                            qDebug() << "Error: " << query3.lastError().text();
+                        }
+                        else{
+                            //Instancia de un detalle de orden
+                            /*OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
+                                                                         descuento.toDouble());*/
+                            //ACTUALIZA CANT PRODUCTOS
+                            int newCant = cant - cantidad.toInt();
+                            QString str = "UPDATE products SET units_in_stock = :newCant WHERE product_id = :productID";
+                            QSqlQuery queryprod;
+                            queryprod.prepare(str);
+                            queryprod.bindValue(":newCant", newCant);
+                            queryprod.bindValue(":productID", product_id.toInt());
+                            if(queryprod.exec()){
+                                QMessageBox::information(this, "PRODUCTOS", "Se actualizo la cantidad de productos");
+                            }
+                        }
+                    } else {
+                        QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
+                        qDebug() << "Error: " << query2.lastError().text();
+                    }
+                }
+                else{
+                    QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
+                }
+                actualizarTabla();
+            } else if (cantidad.toInt() <= 0 || cantidad.isEmpty()){
+                QMessageBox::information(this, "INFO ORDEN", "No ingreso una cantidad valida");
+            }
+        }
+    } else {
+        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para agregarlo");
+    }
 }
 

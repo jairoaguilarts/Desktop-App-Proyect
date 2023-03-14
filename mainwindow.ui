@@ -183,92 +183,12 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>10</y>
-        <width>411</width>
-        <height>191</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Agregar detalle</string>
-      </property>
-      <widget class="QWidget" name="verticalLayoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>151</width>
-         <height>111</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Producto</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_16">
-          <property name="text">
-           <string>Cantidad</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_14">
-          <property name="text">
-           <string>Descuento</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="verticalLayoutWidget_4">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>30</y>
-         <width>221</width>
-         <height>111</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QComboBox" name="CB_Productos"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_cantidad"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_descuento"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="PB_agregardetalles">
-       <property name="geometry">
-        <rect>
-         <x>140</x>
-         <y>150</y>
-         <width>121</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Agregar</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
-        <x>400</x>
-        <y>230</y>
-        <width>421</width>
+        <x>10</x>
+        <y>440</y>
+        <width>821</width>
         <height>201</height>
        </rect>
       </property>
@@ -280,7 +200,7 @@
         <rect>
          <x>10</x>
          <y>30</y>
-         <width>401</width>
+         <width>801</width>
          <height>121</height>
         </rect>
        </property>
@@ -301,7 +221,7 @@
       <widget class="QPushButton" name="emitirorden">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>630</x>
          <y>160</y>
          <width>151</width>
          <height>31</height>
@@ -315,33 +235,59 @@
      <widget class="QGroupBox" name="groupBox_15">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>450</y>
-        <width>771</width>
-        <height>191</height>
+        <x>390</x>
+        <y>10</y>
+        <width>441</width>
+        <height>421</height>
        </rect>
       </property>
       <property name="title">
-       <string>Buscar Producto</string>
+       <string>Agregar Producto</string>
       </property>
       <widget class="QTableView" name="TV_BuscarProductos">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>30</y>
-         <width>481</width>
-         <height>151</height>
+         <x>20</x>
+         <y>80</y>
+         <width>401</width>
+         <height>281</height>
         </rect>
        </property>
       </widget>
       <widget class="QLineEdit" name="LE_BuscarProducto">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>170</x>
          <y>40</y>
          <width>241</width>
          <height>25</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="PB_AgregarDetalle">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>370</y>
+         <width>100</width>
+         <height>32</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Agregar</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>40</y>
+         <width>58</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nombre</string>
        </property>
       </widget>
      </widget>

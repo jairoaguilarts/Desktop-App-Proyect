@@ -21,6 +21,7 @@
 #include <QRandomGenerator>
 #include <QPrinter>
 #include <QPainter>
+#include <QInputDialog>
 
 //Cambiar
 #define HOST_NAME "localhost"
@@ -46,7 +47,7 @@ public:
 private slots:
 
     void on_PB_CrearOrden_clicked();
-    void on_PB_agregardetalles_clicked();
+    //void on_PB_agregardetalles_clicked();
     void on_emitirorden_clicked();
     void on_PB_CrearProducto_clicked();
     void on_PB_ActualizarProducto_clicked();
@@ -58,12 +59,10 @@ private slots:
     void on_pushButton_2_clicked();
     void on_PB_EliminarDetalle_clicked();
     void on_LE_BuscarProducto_textChanged(const QString &arg1);
-
     void on_CL_PB_CrearCliente_clicked();
-
     void on_CL_CB_CamposAModificar_currentIndexChanged(int);
-
     void on_CL_PB_Actualizat_clicked();
+    void on_PB_AgregarDetalle_clicked();
 
 private:
     Ui::MainWindow *ui;
