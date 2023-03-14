@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <iostream>
 #include <vector>
+#include <cctype>
+#include <cstdlib>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
@@ -41,8 +43,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
-
 private slots:
 
     void on_PB_CrearOrden_clicked();
@@ -59,18 +59,30 @@ private slots:
     void on_PB_EliminarDetalle_clicked();
     void on_LE_BuscarProducto_textChanged(const QString &arg1);
 
+    void on_CL_PB_CrearCliente_clicked();
+
+    void on_CL_CB_CamposAModificar_currentIndexChanged(int);
+
+    void on_CL_PB_Actualizat_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
 
     QString imagePath = "";
 
+    QString campo = "";
+
+    QString dato = "";
+
     int orderID_flag;
     int generarIDOrden();
     int generarIDProducto();
     int generarIDEmpleado();
+    QString generarIDCliente(QString);
     void cargarClientes();
     void cargarEmpleados();
+    void cargarTitulos();
     void cargarAgencias();
     void cargarProductos();
     void cargarProveedores();
@@ -81,8 +93,7 @@ private:
     void buscarProducto(const QString &);
     void descontinuarProducto(QTableWidget*, QString&);
     void variable_busqueda(QString& searchText);
-
-
+    void mostrarClientes();
 
 };
 #endif // MAINWINDOW_H
