@@ -1043,11 +1043,14 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
         ui->CL_LE_Modificacion->setHidden(true);
         ui->CL_CB_TitContacto2->setHidden(false);
         ui->CL_TL_ModTitulo->setHidden(false);
+        dato = ui->CL_CB_CamposAModificar->currentText();
     } else{
         ui->CL_TL_Dato_a_Modificar->setHidden(false);
         ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_CB_TitContacto2->setHidden(true);
         ui->CL_TL_ModTitulo->setHidden(true);
+        dato = ui->CL_LE_Modificacion->text();
+
     }
 
     switch(index){
@@ -1095,7 +1098,6 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
 void MainWindow::on_CL_PB_Actualizat_clicked()
 {
     QSqlQuery query;
-    QString dato = ui->CL_LE_Modificacion->text();
     QString id = ui->CL_LE_IDCliente->text();
     QString queryString = "UPDATE customers "
                           "SET :campo = ' :dato ' "

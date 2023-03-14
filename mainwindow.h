@@ -79,6 +79,8 @@ private:
 
     QString campo = "";
 
+    QString dato = "";
+
     int orderID_flag;
 
     int generarIDOrden();
