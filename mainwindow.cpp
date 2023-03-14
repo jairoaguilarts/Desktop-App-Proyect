@@ -1043,13 +1043,11 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
         ui->CL_LE_Modificacion->setHidden(true);
         ui->CL_CB_TitContacto2->setHidden(false);
         ui->CL_TL_ModTitulo->setHidden(false);
-        dato = ui->CL_CB_CamposAModificar->currentText();
     } else{
         ui->CL_TL_Dato_a_Modificar->setHidden(false);
         ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_CB_TitContacto2->setHidden(true);
         ui->CL_TL_ModTitulo->setHidden(true);
-        dato = ui->CL_LE_Modificacion->text();
 
     }
 
@@ -1103,9 +1101,15 @@ void MainWindow::on_CL_PB_Actualizat_clicked()
                           "SET :campo = ' :dato ' "
                           "WHERE customer_id = ' :id '";
 
+    if(ui->CL_CB_CamposAModificar->currentIndex() == 3)
+        this->dato = ui->CL_CB_TitContacto2->currentText();
+    else
+        this->dato = ui->CL_LE_Modificacion->text();
+
+
     query.prepare(queryString);
     query.bindValue(":campo", this->campo);
-    query.bindValue(":dato", dato);
+    query.bindValue(":dato", this->dato);
     query.bindValue(":id", id);
 
     if (!query.exec()) {
