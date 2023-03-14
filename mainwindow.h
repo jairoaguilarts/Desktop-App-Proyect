@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <iostream>
 #include <vector>
+#include <cctype>
+#include <cstdlib>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
@@ -23,7 +25,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "Honduras1286"
 #define DATABASE_NAME "northwind"
 
 
@@ -38,6 +40,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 
 private slots:
     void on_PB_CrearOrden_clicked();
@@ -62,11 +65,19 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_CL_PB_CrearCliente_clicked();
+
+    void on_CL_CB_CamposAModificar_currentIndexChanged(int);
+
+    void on_CL_PB_Actualizat_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
 
     QString imagePath = "";
+
+    QString campo = "";
 
     int orderID_flag;
 
@@ -76,9 +87,13 @@ private:
 
     int generarIDEmpleado();
 
+    QString generarIDCliente(QString);
+
     void cargarClientes();
 
     void cargarEmpleados();
+
+    void cargarTitulos();
 
     void cargarAgencias();
 
@@ -95,6 +110,8 @@ private:
     void mostrarEmpleados();
 
     void descontinuarProducto(QTableWidget*, QString&);
+
+    void mostrarClientes();
 
 };
 #endif // MAINWINDOW_H

@@ -34,9 +34,14 @@ MainWindow::MainWindow(QWidget *parent)
     cargarProductos();
     cargarProveedores();
     cargarCategorias();
+    cargarTitulos();
+    mostrarClientes();
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
     ui->DE_fechaContratado->setDate(QDate::currentDate());
+    //Cosas ocultas para fines esteticos
+    ui->CL_CB_TitContacto2->setHidden(true);
+    ui->CL_TL_ModTitulo->setHidden(true);
 }
 
 MainWindow::~MainWindow()
@@ -84,6 +89,21 @@ void MainWindow::cargarAgencias()
             items.append(query.value(0).toString());
         }
         ui->CB_Agencia->addItems(items);
+    }
+}
+
+void MainWindow::cargarTitulos(){
+    QSqlQuery query;
+    ui->CL_CB_TituloContacto->clear();
+    ui->CL_CB_TitContacto2->clear();
+    query.prepare("select distinct contact_title from customers order by contact_title asc");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->CL_CB_TituloContacto->addItems(items);
+        ui->CL_CB_TitContacto2->addItems(items);
     }
 }
 
@@ -935,3 +955,168 @@ void MainWindow::on_pushButton_3_clicked()
         ui->LE_A_Extension->clear();
     }
 }
+
+void MainWindow::mostrarClientes(){
+    QSqlQueryModel *modelo = new QSqlQueryModel();
+    modelo->setQuery("select customer_id as ID_Cliente, company_name as Compañia, contact_name as Contacto, contact_title as Titulo_Contacto, "
+                     "address as Direccion, city as Ciudad, region as Region, postal_code as Codigo_Postal, phone as Telefono, fax as Fax "
+                     "from customers "
+                     "order by customer_id asc");
+    ui->TV_Clientes->setModel(modelo);
+    ui->TV_Clientes->resizeColumnsToContents();
+    ui->TV_Clientes->columnViewportPosition(0);
+    //ui->TV_Clientes->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+QString MainWindow::generarIDCliente(QString nomComp){
+    QString res;
+    int j = 0, i = 0;
+    while(j < 5 && i < nomComp.length()){
+        if(!nomComp[j].isSpace()){
+            res += nomComp[j];
+            j++;
+        }
+        i++;
+    }
+
+    while(res.length() < 5){
+        int charAscii = rand() % 26 + 65;
+        res += (char)charAscii;
+    }
+    return res;
+}
+
+void MainWindow::on_CL_PB_CrearCliente_clicked()
+{
+    QString nomCompañia = ui->CL_LE_NomEmpresa->text();
+    QString nomContacto = ui->CL_LE_NomContacto->text();
+    QString titContacto = ui->CL_CB_TituloContacto->currentText();
+    QString direccion = ui->CL_LE_Direccion->text();
+    QString idCliente = generarIDCliente(nomCompañia);
+    QString codPostal = ui->CL_LE_CodPostal->text();
+    QString telefono = ui->CL_LE_Telefono->text();
+    QString ciudad = ui->CL_LE_Ciudad->text();
+    QString region = ui->CL_LE_Region->text();
+    QString pais = ui->CL_LE_Pais->text();
+    QString fax = ui->CL_LE_Fax->text();
+
+    QSqlQuery query;
+    QString queryString = "INSERT INTO customers (customer_id, company_name, contact_name, contact_title, address, city, region, postal_code, country, phone, fax) "
+                          "VALUES (:id, :comNam, :contNam, :contTitle, :addss, :city, :region, :posCode, :country, :phone, :fax)";
+    query.prepare(queryString);
+    query.bindValue(":id", idCliente);
+    query.bindValue(":comNam", nomCompañia);
+    query.bindValue(":contNam", nomContacto);
+    query.bindValue(":contTitle", titContacto);
+    query.bindValue(":addss", direccion);
+    query.bindValue(":city", ciudad);
+    query.bindValue(":region", region);
+    query.bindValue(":posCode", codPostal);
+    query.bindValue(":country", pais);
+    query.bindValue(":phone", telefono);
+    query.bindValue(":fax", fax);
+
+    if(!query.exec()){
+        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser creado :(");
+        qDebug() << "Error: " << query.lastError().text();
+    } else {
+        mostrarClientes();
+        ui->CL_LE_NomEmpresa->clear();
+        ui->CL_LE_NomContacto->clear();
+        ui->CL_LE_Direccion->clear();
+        ui->CL_LE_CodPostal->clear();
+        ui->CL_LE_Telefono->clear();
+        ui->CL_LE_Ciudad->clear();
+        ui->CL_LE_Region->clear();
+        ui->CL_LE_Pais->clear();
+        ui->CL_LE_Fax->clear();
+        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue creado exitosamente :D");
+    }
+}
+
+
+void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
+{
+
+    if(index == 3){
+        ui->CL_TL_Dato_a_Modificar->setHidden(true);
+        ui->CL_LE_Modificacion->setHidden(true);
+        ui->CL_CB_TitContacto2->setHidden(false);
+        ui->CL_TL_ModTitulo->setHidden(false);
+    } else{
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
+        ui->CL_CB_TitContacto2->setHidden(true);
+        ui->CL_TL_ModTitulo->setHidden(true);
+    }
+
+    switch(index){
+    case 0:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese el ID");
+        this->campo = "customer_id";
+        break;
+    case 1:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese Nombre de Compañia");
+        this->campo = "company_name";
+        break;
+    case 2:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese Nombre de Contacto");
+        this->campo = "contact_name";
+        break;
+    case 4:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Direccion");
+        this->campo = "address";
+        break;
+    case 5:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Ciudad");
+        this->campo = "city";
+        break;
+    case 6:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Region");
+        this->campo = "region";
+        break;
+    case 7:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Codigo Postal");
+        this->campo = "postal_code";
+        break;
+    case 8:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Telefono");
+        this->campo = "phone";
+        break;
+    case 9:
+        ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Fax");
+        this->campo = "fax";
+        break;
+    }
+
+}
+
+
+void MainWindow::on_CL_PB_Actualizat_clicked()
+{
+    QSqlQuery query;
+    QString dato = ui->CL_LE_Modificacion->text();
+    QString id = ui->CL_LE_IDCliente->text();
+    QString queryString = "UPDATE customers "
+                          "SET :campo = ' :dato ' "
+                          "WHERE customer_id = ' :id '";
+
+    query.prepare(queryString);
+    query.bindValue(":campo", this->campo);
+    query.bindValue(":dato", dato);
+    query.bindValue(":id", id);
+
+    if (!query.exec()) {
+        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser Actualizado :(");
+        qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
+    } else{
+        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue Actualizado Exitosamente :D");
+        ui->CL_LE_IDCliente->clear();
+        ui->CL_LE_Modificacion->clear();
+    }
+
+    cout << endl << campo.toStdString() << endl;
+    cout << endl << dato.toStdString() << endl;
+    cout << endl << id.toStdString() << endl;
+}
+
