@@ -758,8 +758,8 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 void MainWindow::mostrarEmpleados() {
     QSqlQueryModel *model = new QSqlQueryModel();
     model->setQuery("SELECT e.employee_id, e.title_of_courtesy, concat(e.first_name, ' ', e.last_name) AS Nombre, concat(m.first_name, ' ', m.last_name) AS Manager "
-                    "FROM Employees e "
-                    "LEFT JOIN Employees m ON e.reports_to = m.employee_id"
+                    "FROM employees e "
+                    "LEFT JOIN employees m ON e.reports_to = m.employee_id "
                     "ORDER BY employee_id ASC");
     ui->TV_Empleados->setModel(model);
     ui->TV_Empleados->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
