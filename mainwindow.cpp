@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <iostream>
+#include <QStandardItemModel>
+
 
 using namespace std;
 
@@ -13,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     //Conexion a PSQL
     database = QSqlDatabase::addDatabase("QPSQL");
     database.setHostName(HOST_NAME);
@@ -37,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
     ui->DE_fechaContratado->setDate(QDate::currentDate());
+    on_LE_BuscarProducto_textChanged("");
+
 }
 
 MainWindow::~MainWindow()
@@ -960,35 +965,49 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
     }
 }
 
-void MainWindow::buscarProducto(const QString &patron) {
-    // Ejecutar la consulta SQL para buscar productos que coincidan con el patrón de búsqueda
-    QSqlQuery consulta;
-    consulta.prepare("SELECT * FROM products WHERE product_name LIKE :patron");
-    consulta.bindValue(":patron", "%" + patron + "%");
-    consulta.exec();
-
-    // Recuperar los resultados de la consulta y hacer algo con ellos
-    ui->TW_buscarProducto->setRowCount(0);
-    int fila = 0;
-    while (consulta.next()) {
-        ui->TW_buscarProducto->insertRow(fila);
-        ui->TW_buscarProducto->setItem(fila, 0, new QTableWidgetItem(consulta.value("product_name").toString()));
-        ui->TW_buscarProducto->setItem(fila, 1, new QTableWidgetItem(consulta.value("unit_price").toString()));
-        // Agregar un botón para seleccionar el producto correspondiente
-        QPushButton *botonSeleccionar = new QPushButton("Seleccionar");
-        ui->TW_buscarProducto->setCellWidget(fila, 2, botonSeleccionar);
-        connect(botonSeleccionar, &QPushButton::clicked, [=]() {
-            QString nombreProducto = consulta.value("product_name").toString();
-            double precioProducto = consulta.value("unit_price").toDouble();
-            // Hacer algo con el nombre y precio del producto seleccionado
-        });
-        fila++;
-    }
-}
 
 
-void MainWindow::on_LE_buscarProducto_textChanged(const QString &arg1)
+
+void MainWindow::variable_busqueda(QString& searchText)
 {
-    buscarProducto(arg1);
+    ui->LE_BuscarProducto->setText(searchText);
 }
+
+void MainWindow::on_LE_BuscarProducto_textChanged(const QString &searchText)
+{
+      ui->TV_BuscarProductos->resizeColumnsToContents();
+      ui->TV_BuscarProductos->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // Crear el modelo de tabla y vincularlo al QTableView
+      QStandardItemModel *model = new QStandardItemModel(this);
+      model->setColumnCount(2);
+      model->setHeaderData(0, Qt::Horizontal, tr("Product ID"));
+      model->setHeaderData(1, Qt::Horizontal, tr("Product Name"));
+      ui->TV_BuscarProductos->setModel(model);
+
+      // Ejecutar la consulta SQL para buscar los productos
+      QSqlQuery query(database);
+      if (searchText.isEmpty()) {
+          query.prepare("SELECT product_id, product_name FROM products");
+      } else {
+          query.prepare("SELECT product_id, product_name FROM products WHERE product_name ILIKE ?");
+          query.bindValue(0, "%" + searchText + "%");
+      }
+      if (!query.exec()) {
+          QMessageBox::critical(this, tr("Error"), tr("Could not execute query."));
+          return;
+      }
+
+      // Limpiar el modelo de tabla antes de agregar los nuevos resultados
+      model->removeRows(0, model->rowCount());
+
+      // Agregar los resultados al modelo de tabla
+      int row = 0;
+      while (query.next()) {
+          int id = query.value(0).toInt();
+          QString name = query.value(1).toString();
+          model->setItem(row, 0, new QStandardItem(QString::number(id)));
+          model->setItem(row, 1, new QStandardItem(name));
+          row++;
+      }
+    }
 

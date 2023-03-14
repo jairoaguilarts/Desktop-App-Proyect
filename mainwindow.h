@@ -23,7 +23,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "12345"
 #define DATABASE_NAME "northwind"
 
 
@@ -33,11 +33,15 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
+
     Q_OBJECT
+
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+
 
 private slots:
 
@@ -53,7 +57,7 @@ private slots:
     void on_pushButton_3_clicked();
     void on_pushButton_2_clicked();
     void on_PB_EliminarDetalle_clicked();
-    void on_LE_buscarProducto_textChanged(const QString &arg1);
+    void on_LE_BuscarProducto_textChanged(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -76,6 +80,9 @@ private:
     void mostrarEmpleados();
     void buscarProducto(const QString &);
     void descontinuarProducto(QTableWidget*, QString&);
+    void variable_busqueda(QString& searchText);
+
+
 
 };
 #endif // MAINWINDOW_H
