@@ -1305,7 +1305,7 @@
        </property>
        <item>
         <property name="text">
-         <string>ID</string>
+         <string/>
         </property>
        </item>
        <item>
@@ -1395,12 +1395,12 @@
         <rect>
          <x>30</x>
          <y>180</y>
-         <width>161</width>
+         <width>171</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>Ingrese ID</string>
+        <string>Selecciona un Dato a Modificar</string>
        </property>
       </widget>
       <widget class="QLabel" name="CL_TL_ModTitulo">

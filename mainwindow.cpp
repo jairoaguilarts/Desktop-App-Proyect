@@ -1039,6 +1039,7 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
 {
 
     if(index == 3){
+        campo = "contact_title";
         ui->CL_TL_Dato_a_Modificar->setHidden(true);
         ui->CL_LE_Modificacion->setHidden(true);
         ui->CL_CB_TitContacto2->setHidden(false);
@@ -1053,8 +1054,7 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
 
     switch(index){
     case 0:
-        ui->CL_TL_Dato_a_Modificar->setText("Ingrese el ID");
-        this->campo = "customer_id";
+        ui->CL_TL_Dato_a_Modificar->setText("Selecciona un Dato a Modificar");
         break;
     case 1:
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese Nombre de Compañia");
@@ -1097,32 +1097,25 @@ void MainWindow::on_CL_PB_Actualizat_clicked()
 {
     QSqlQuery query;
     QString id = ui->CL_LE_IDCliente->text();
-    QString queryString = "UPDATE customers "
-                          "SET :campo = ' :dato ' "
-                          "WHERE customer_id = ' :id '";
 
     if(ui->CL_CB_CamposAModificar->currentIndex() == 3)
         this->dato = ui->CL_CB_TitContacto2->currentText();
     else
         this->dato = ui->CL_LE_Modificacion->text();
 
+    QString queryString = QString("UPDATE customers SET %1= '%2' WHERE customer_id = '%3'")
+            .arg(campo)
+            .arg(dato)
+            .arg(id);
 
-    query.prepare(queryString);
-    query.bindValue(":campo", this->campo);
-    query.bindValue(":dato", this->dato);
-    query.bindValue(":id", id);
-
-    if (!query.exec()) {
+    if (!query.exec(queryString)) {
         QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser Actualizado :(");
         qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
     } else{
         QMessageBox::information(this, "INFO CLIENTE", "El cliente fue Actualizado Exitosamente :D");
         ui->CL_LE_IDCliente->clear();
         ui->CL_LE_Modificacion->clear();
+        mostrarClientes();
     }
-
-    cout << endl << campo.toStdString() << endl;
-    cout << endl << dato.toStdString() << endl;
-    cout << endl << id.toStdString() << endl;
 }
 
