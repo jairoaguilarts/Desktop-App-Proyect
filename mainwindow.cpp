@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <iostream>
+#include <QStandardItemModel>
+
 
 using namespace std;
 
@@ -13,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     //Conexion a PSQL
     database = QSqlDatabase::addDatabase("QPSQL");
     database.setHostName(HOST_NAME);
@@ -42,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent)
     //Cosas ocultas para fines esteticos
     ui->CL_CB_TitContacto2->setHidden(true);
     ui->CL_TL_ModTitulo->setHidden(true);
+    on_LE_BuscarProducto_textChanged("");
+
 }
 
 MainWindow::~MainWindow()
@@ -248,7 +253,7 @@ int MainWindow::generarIDOrden()
 void MainWindow::actualizarTabla()
 {
     QSqlQueryModel *queryModel = new QSqlQueryModel();
-    queryModel->setQuery(QString("SELECT product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
+    queryModel->setQuery(QString("SELECT products.product_id, product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
     ui->TV_detalles->setModel(queryModel);
     ui->TV_detalles->resizeColumnsToContents();
     ui->TV_detalles->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -1034,6 +1039,30 @@ void MainWindow::on_CL_PB_CrearCliente_clicked()
     }
 }
 
+void MainWindow::on_PB_EliminarDetalle_clicked()
+{
+    //Obtener el modelo de la tabla
+    QAbstractItemModel *modelo = ui->TV_detalles->model();
+    QModelIndexList indicesSeleccionados = ui->TV_detalles->selectionModel()->selectedIndexes();
+
+    //Obtener el dato de la primera columna de la fila seleccionada
+    if (!indicesSeleccionados.isEmpty()) {
+        QModelIndex indice = indicesSeleccionados.first();
+        QVariant dato = modelo->data(modelo->index(indice.row(), 0));
+        if (dato.isValid()) {
+            QString valor = dato.toString();
+            QSqlQuery query;
+            query.prepare(QString("DELETE FROM order_details WHERE product_id = %1").arg(valor.toInt()));
+            if(!query.exec()) {
+                qDebug() << "No se pudo eliminar el registro";
+            }
+            actualizarTabla();
+        }
+    } else {
+        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
+    }
+}
+
 
 void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
 {
@@ -1117,5 +1146,49 @@ void MainWindow::on_CL_PB_Actualizat_clicked()
         ui->CL_LE_Modificacion->clear();
         mostrarClientes();
     }
+}
+
+
+void MainWindow::variable_busqueda(QString& searchText)
+{
+    ui->LE_BuscarProducto->setText(searchText);
+}
+
+void MainWindow::on_LE_BuscarProducto_textChanged(const QString &searchText)
+{
+      ui->TV_BuscarProductos->resizeColumnsToContents();
+      ui->TV_BuscarProductos->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // Crear el modelo de tabla y vincularlo al QTableView
+      QStandardItemModel *model = new QStandardItemModel(this);
+      model->setColumnCount(2);
+      model->setHeaderData(0, Qt::Horizontal, tr("Product ID"));
+      model->setHeaderData(1, Qt::Horizontal, tr("Product Name"));
+      ui->TV_BuscarProductos->setModel(model);
+
+      // Ejecutar la consulta SQL para buscar los productos
+      QSqlQuery query(database);
+      if (searchText.isEmpty()) {
+          query.prepare("SELECT product_id, product_name FROM products");
+      } else {
+          query.prepare("SELECT product_id, product_name FROM products WHERE product_name ILIKE ?");
+          query.bindValue(0, "%" + searchText + "%");
+      }
+      if (!query.exec()) {
+          QMessageBox::critical(this, tr("Error"), tr("Could not execute query."));
+          return;
+      }
+
+      // Limpiar el modelo de tabla antes de agregar los nuevos resultados
+      model->removeRows(0, model->rowCount());
+
+      // Agregar los resultados al modelo de tabla
+      int row = 0;
+      while (query.next()) {
+          int id = query.value(0).toInt();
+          QString name = query.value(1).toString();
+          model->setItem(row, 0, new QStandardItem(QString::number(id)));
+          model->setItem(row, 1, new QStandardItem(name));
+          row++;
+      }
 }
 

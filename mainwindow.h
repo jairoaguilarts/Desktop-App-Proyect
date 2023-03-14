@@ -25,7 +25,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "12345"
 #define DATABASE_NAME "northwind"
 
 
@@ -35,35 +35,29 @@ QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
+
     Q_OBJECT
+
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
+
     void on_PB_CrearOrden_clicked();
-
     void on_PB_agregardetalles_clicked();
-
     void on_emitirorden_clicked();
-
     void on_PB_CrearProducto_clicked();
-
     void on_PB_ActualizarProducto_clicked();
-
     void on_PB_Descontinuar_clicked();
-
     void on_tabWidget_currentChanged(int index);
-
     void on_PB_CrearEmpleado_clicked();
-
     void on_pushButton_clicked();
-
     void on_pushButton_3_clicked();
-
     void on_pushButton_2_clicked();
+    void on_PB_EliminarDetalle_clicked();
+    void on_LE_BuscarProducto_textChanged(const QString &arg1);
 
     void on_CL_PB_CrearCliente_clicked();
 
@@ -82,37 +76,23 @@ private:
     QString dato = "";
 
     int orderID_flag;
-
     int generarIDOrden();
-
     int generarIDProducto();
-
     int generarIDEmpleado();
-
     QString generarIDCliente(QString);
-
     void cargarClientes();
-
     void cargarEmpleados();
-
     void cargarTitulos();
-
     void cargarAgencias();
-
     void cargarProductos();
-
     void cargarProveedores();
-
     void cargarCategorias();
-
     void actualizarTabla();
-
     void mostrarProductos(QTableWidget*);
-
     void mostrarEmpleados();
-
+    void buscarProducto(const QString &);
     void descontinuarProducto(QTableWidget*, QString&);
-
+    void variable_busqueda(QString& searchText);
     void mostrarClientes();
 
 };
