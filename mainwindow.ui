@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -324,23 +324,23 @@
       <property name="title">
        <string>Buscar Producto</string>
       </property>
-      <widget class="QLineEdit" name="LE_buscarProducto">
+      <widget class="QTableView" name="TV_BuscarProductos">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>40</y>
-         <width>191</width>
-         <height>21</height>
+         <x>270</x>
+         <y>30</y>
+         <width>481</width>
+         <height>151</height>
         </rect>
        </property>
       </widget>
-      <widget class="QTableWidget" name="TW_buscarProducto">
+      <widget class="QLineEdit" name="LE_BuscarProducto">
        <property name="geometry">
         <rect>
-         <x>225</x>
-         <y>30</y>
-         <width>531</width>
-         <height>151</height>
+         <x>10</x>
+         <y>40</y>
+         <width>241</width>
+         <height>25</height>
         </rect>
        </property>
       </widget>
@@ -1519,39 +1519,6 @@
        </property>
       </widget>
      </widget>
-     <widget class="QLabel" name="label_61">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>50</y>
-        <width>63</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Buscar </string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="LE_BuscarProducto">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>40</y>
-        <width>169</width>
-        <height>25</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QTableView" name="TV_BuscarProductos">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>80</y>
-        <width>301</width>
-        <height>441</height>
-       </rect>
-      </property>
-     </widget>
     </widget>
    </widget>
   </widget>
@@ -1561,7 +1528,7 @@
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
