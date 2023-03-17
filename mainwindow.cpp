@@ -1225,7 +1225,14 @@ void MainWindow::on_PB_AgregarDetalle_clicked()
                 }
 
                 //Obtiene los datos de los Line Edits
-                QString descuento = "0.01";
+                QString descuento;
+                QSqlQuery querydescuento;
+                if (querydescuento.exec(QString("SELECT discount FROM Discounts WHERE product_id = '%1' AND start_date <= current_date AND end_date >= current_date").arg(product_id.toInt())) && querydescuento.next()) {
+                    descuento = querydescuento.value(0).toString();
+                } else {
+                    descuento = "";
+                }
+
                 QSqlQuery querycant;
                 int cant;
                 if(querycant.exec(QString("SELECT units_in_stock FROM products WHERE product_id = '%1'").arg(product_id.toInt())) && querycant.next()){
