@@ -26,7 +26,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "123"
+#define PASSWORD "1234"
 #define DATABASE_NAME "northwind"
 
 
