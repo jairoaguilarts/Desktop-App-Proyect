@@ -673,6 +673,21 @@ void MainWindow::on_PB_ActualizarProducto_clicked()
     if(undDisp == "" && precXund == "")
         QMessageBox::information(this, "INFO PRODUCTO", "Informacion Incompleta!");
     else if(undDisp == ""){
+        QString lastPrice;
+        QSqlQuery queryLastPrice;
+        queryLastPrice.prepare(QString("select unit_price from products where product_id = %1").arg(id.toInt()));
+        if(queryLastPrice.exec() && queryLastPrice.next()) {
+            lastPrice = queryLastPrice.value(0).toString();
+            QSqlQuery insertLastPrice;
+            insertLastPrice.prepare("INSERT INTO historialprecioproductos (IdProducto, Fecha, PrecioUnitario) "
+                                    "VALUES (:prodID, :date, :price)");
+            insertLastPrice.bindValue(":prodID", id.toInt());
+            insertLastPrice.bindValue(":date", QDate::currentDate().toString());
+            insertLastPrice.bindValue(":price", lastPrice.toFloat());
+            if(!insertLastPrice.exec()) {
+                qDebug() << "Error: " << insertLastPrice.lastError().text();
+            }
+        }
         QString queryString = "UPDATE products "
                               "SET unit_price = :precUnd "
                               "WHERE product_id = :prodID";
