@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -789,7 +789,7 @@
          <x>180</x>
          <y>30</y>
          <width>160</width>
-         <height>521</height>
+         <height>523</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -910,154 +910,208 @@
      <widget class="QGroupBox" name="groupBox_13">
       <property name="geometry">
        <rect>
-        <x>400</x>
+        <x>390</x>
         <y>10</y>
-        <width>391</width>
+        <width>421</width>
         <height>411</height>
        </rect>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>Actualizar Empleado</string>
       </property>
-      <widget class="QWidget" name="verticalLayoutWidget_11">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>30</y>
-         <width>160</width>
-         <height>331</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <item>
-         <widget class="QLabel" name="label_29">
-          <property name="text">
-           <string>Nombre</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_30">
-          <property name="text">
-           <string>Direccion</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_31">
-          <property name="text">
-           <string>Ciudad</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_32">
-          <property name="text">
-           <string>Region</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_33">
-          <property name="text">
-           <string>Codigo postal</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_34">
-          <property name="text">
-           <string>Pais</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_35">
-          <property name="text">
-           <string>Telefono</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_50">
-          <property name="text">
-           <string>Exension</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_49">
-          <property name="text">
-           <string>Photo</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_48">
-          <property name="text">
-           <string>Reports to</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="verticalLayoutWidget_12">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>30</y>
-         <width>160</width>
-         <height>346</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_12">
-        <item>
-         <widget class="QComboBox" name="CB_Empleado_3"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_Direccion"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_Ciudad"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_Region"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_codigoPostal"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_PaisE"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_Telefono"/>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="LE_A_Extension"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>Seleccionar...</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="CB_Empleado_4"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="EMP_PB_ActualizarEstaShit">
        <property name="geometry">
         <rect>
          <x>150</x>
-         <y>380</y>
+         <y>360</y>
          <width>100</width>
          <height>32</height>
         </rect>
        </property>
        <property name="text">
         <string>Actualizar</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>140</y>
+         <width>141</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Campo a Actualizar</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="EMP_CB_SeleccionDato">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>140</y>
+         <width>191</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Apellido</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Nombre</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Titulo</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Titulo de Cortesia</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Fecha de Nacimiento</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Fecha de Contratacion</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Direccion</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ciudad</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Region</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Codigo Postal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Pais</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Telefono Fijo</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Extension</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Notas</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Se Reporta A</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLineEdit" name="EMP_LE_DatoMod">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>240</y>
+         <width>181</width>
+         <height>28</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="EMP_LAB_DatoXLE">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>210</y>
+         <width>141</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Seleccione un campo</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="EMP_LAB_DatoXCB">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>210</y>
+         <width>171</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nuevo Tiulo de Cortesia</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="EMP_CB_TituloYCortesia">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>240</y>
+         <width>181</width>
+         <height>28</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDateEdit" name="EMP_DE_FechaNueva">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>240</y>
+         <width>181</width>
+         <height>29</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>50</y>
+         <width>131</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>ID del Empleado</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="EMP_LE_IdEmpleado">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>50</y>
+         <width>191</width>
+         <height>28</height>
+        </rect>
        </property>
       </widget>
      </widget>
@@ -1364,7 +1418,7 @@
         <rect>
          <x>30</x>
          <y>40</y>
-         <width>81</width>
+         <width>91</width>
          <height>20</height>
         </rect>
        </property>
@@ -1387,7 +1441,7 @@
         <rect>
          <x>30</x>
          <y>180</y>
-         <width>201</width>
+         <width>211</width>
          <height>20</height>
         </rect>
        </property>
@@ -1474,7 +1528,7 @@
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

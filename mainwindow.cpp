@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
     ui->DE_fechaContratado->setDate(QDate::currentDate());
+    cargarEmpleados();
+    defaultConfig();
     //Cosas ocultas para fines esteticos
     ui->CL_CB_TitContacto2->setHidden(true);
     ui->CL_TL_ModTitulo->setHidden(true);
@@ -55,6 +57,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::defaultConfig(){
+    ui->EMP_LAB_DatoXCB->setHidden(true);
+    ui->EMP_LAB_DatoXLE->setHidden(true);
+    ui->EMP_LE_DatoMod->setHidden(true);
+    ui->EMP_CB_TituloYCortesia->setHidden(true);
+    ui->EMP_DE_FechaNueva->setHidden(true);
+}
 void MainWindow::cargarClientes()
 {
     QSqlQuery query;
@@ -71,6 +80,9 @@ void MainWindow::cargarClientes()
 void MainWindow::cargarEmpleados()
 {
     QSqlQuery query;
+    ui->CB_Empleado->clear();
+    ui->CB_Empleado_2->clear();
+    ui->EMP_CB_TituloYCortesia->clear();
     query.prepare("select first_name, last_name from employees ORDER BY employee_id ASC");
     if(query.exec()) {
         QStringList items;
@@ -79,8 +91,9 @@ void MainWindow::cargarEmpleados()
         }
         ui->CB_Empleado->addItems(items);
         ui->CB_Empleado_2->addItems(items);
-        ui->CB_Empleado_3->addItems(items);
-        ui->CB_Empleado_4->addItems(items);
+        ui->EMP_CB_TituloYCortesia->addItems(items);
+        //ui->CB_Empleado_3->addItems(items);
+        //ui->CB_Empleado_4->addItems(items);
     }
 }
 
@@ -94,6 +107,18 @@ void MainWindow::cargarAgencias()
             items.append(query.value(0).toString());
         }
         ui->CB_Agencia->addItems(items);
+    }
+}
+
+void MainWindow::cargarContactos(){
+    QSqlQuery query;
+    query.prepare("select distinct contact_name from customers order by contact_name asc");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        //ui->CL_CB_ConNameID->addItems(items);
     }
 }
 
@@ -149,6 +174,32 @@ void MainWindow::cargarCategorias()
             items.append(query.value(0).toString());
         }
         ui->CB_Categoria->addItems(items);
+    }
+}
+
+void MainWindow::cargarTituloEmpleado(){
+    QSqlQuery query;
+    ui->EMP_CB_TituloYCortesia->clear();
+    query.prepare("SELECT DISTINCT title FROM employees ORDER BY title ASC");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->EMP_CB_TituloYCortesia->addItems(items);
+    }
+}
+
+void MainWindow::cargarTituloCorEMP(){
+    QSqlQuery query;
+    ui->EMP_CB_TituloYCortesia->clear();
+    query.prepare("SELECT DISTINCT title_of_courtesy FROM employees ORDER BY title_of_courtesy ASC");
+    if(query.exec()) {
+        QStringList items;
+        while (query.next()) {
+            items.append(query.value(0).toString());
+        }
+        ui->EMP_CB_TituloYCortesia->addItems(items);
     }
 }
 
@@ -799,10 +850,11 @@ void MainWindow::on_PB_CrearEmpleado_clicked()
     QByteArray imageData = imageFile.readAll();
     imageFile.close();
 
+    QString reportsTo;
     QString nombreManager = ui->CB_Empleado_2->currentText();
     QStringList nombreManagerSeparado = nombreManager.split(' ');
+
     //Obtiene el manager del empleado
-    QString reportsTo;
     QSqlQuery queryEmpleado;
     queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
     queryEmpleado.addBindValue(nombreManagerSeparado.first());
@@ -863,7 +915,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 
-void MainWindow::on_pushButton_2_clicked()
+/*void MainWindow::on_pushButton_2_clicked()
 {
     QString nombre = ui->CB_Empleado_3->currentText();
     QStringList nombreSeparado = nombre.split(' ');
@@ -889,74 +941,43 @@ void MainWindow::on_pushButton_2_clicked()
     if (imagePath.isEmpty()) {
         imagePath = photoPath;
     }
-}
+}*/
 
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_EMP_PB_ActualizarEstaShit_clicked()
 {
-    QString nombre = ui->CB_Empleado_3->currentText();
-    QStringList nombreSeparado = nombre.split(' ');
-    //Obtiene el id del empleado
-    QString idEmpleado;
-    QSqlQuery queryEmpleado;
-    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
-    queryEmpleado.addBindValue(nombreSeparado.first());
-    queryEmpleado.addBindValue(nombreSeparado.last());
-    if(queryEmpleado.exec() && queryEmpleado.next()) {
-        idEmpleado = queryEmpleado.value(0).toString();
-    }
-
-    QString direccion = ui->LE_A_Direccion->text();
-    QString ciudad = ui->LE_A_Ciudad->text();
-    QString region = ui->LE_A_Region->text();
-    QString codigoPostal = ui->LE_A_codigoPostal->text();
-    QString pais = ui->LE_A_PaisE->text();
-    QString telefono = ui->LE_A_Telefono->text();
-    QString extension = ui->LE_A_Extension->text();
-
-    //Obtiene los bytes de la imagen
-    QFile imageFile(imagePath);
-    if (!imageFile.open(QIODevice::ReadOnly)) {
-        qDebug() << "Error al abrir el archivo:" << imageFile.errorString();
-    }
-    QByteArray imageData = imageFile.readAll();
-    imageFile.close();
-
-    QString nombreManager = ui->CB_Empleado_2->currentText();
-    QStringList nombreManagerSeparado = nombreManager.split(' ');
-    //Obtiene el manager del empleado
-    QString reportsTo;
-    QSqlQuery queryManager;
-    queryManager.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
-    queryManager.addBindValue(nombreManagerSeparado.first());
-    queryManager.addBindValue(nombreManagerSeparado.last());
-    if(queryManager.exec() && queryManager.next()) {
-        reportsTo = queryManager.value(0).toString();
-    }
-
+    QDate Fecha;
     QSqlQuery query;
-    query.prepare("UPDATE employees SET address = ?, city = ?, region = ?, postal_code = ?, country = ?, home_phone = ?, extension = ?, photo = ?, reports_to = ?, photo_path = ? WHERE employee_id = ?");
-    query.addBindValue(direccion);
-    query.addBindValue(ciudad);
-    query.addBindValue(region);
-    query.addBindValue(codigoPostal);
-    query.addBindValue(pais);
-    query.addBindValue(telefono);
-    query.addBindValue(extension);
-    query.addBindValue(imageData);
-    query.addBindValue(reportsTo.toInt());
-    query.addBindValue(imagePath);
-    query.addBindValue(idEmpleado);
-    if (!query.exec()) {
-        qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
+    QString id = ui->EMP_LE_IdEmpleado->text();
+
+    if(ui->EMP_CB_SeleccionDato->currentIndex() == 3 || ui->EMP_CB_SeleccionDato->currentIndex() == 4)
+        dato = ui->EMP_CB_TituloYCortesia->currentText();
+    else if(ui->EMP_CB_SeleccionDato->currentIndex() == 5 || ui->EMP_CB_SeleccionDato->currentIndex() == 6)
+        Fecha = ui->EMP_DE_FechaNueva->date();
+    else if(ui->EMP_CB_SeleccionDato->currentIndex() == 15)
+        dato = shortcutParaManager();
+    else
+        dato = ui->EMP_LE_DatoMod->text();
+
+    QString queryString = "";
+    if(ui->EMP_CB_SeleccionDato->currentIndex() == 5 || ui->EMP_CB_SeleccionDato->currentIndex() == 6){
+        queryString = QString("UPDATE employees SET %1 = '%2' WHERE employee_id = %3")
+                .arg(campo, Fecha.toString("yyyy-MM-dd"), id);
+
+    } else if (ui->EMP_CB_SeleccionDato->currentIndex() == 15){
+        queryString = QString("UPDATE employees SET %1 = %2 WHERE employee_id = %3")
+                .arg(campo, dato, id);
     } else {
-        ui->LE_A_Direccion->clear();
-        ui->LE_A_Ciudad->clear();
-        ui->LE_A_Region->clear();
-        ui->LE_A_codigoPostal->clear();
-        ui->LE_A_PaisE->clear();
-        ui->LE_A_Telefono->clear();
-        ui->LE_A_Extension->clear();
+        queryString = QString("UPDATE employees SET %1 = '%2' WHERE employee_id = %3")
+                .arg(campo, dato, id);
+    }
+
+    if (!query.exec(queryString)) {
+        QMessageBox::information(this, "ERROR EMPLEADO", "El empleado no pudo ser Actualizado :(");
+        qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
+    } else{
+        QMessageBox::information(this, "INFO EMPLEADO", "El empleado fue Actualizado Exitosamente :D");
+        ui->EMP_LE_DatoMod->clear();
     }
 }
 
@@ -1290,5 +1311,112 @@ void MainWindow::on_PB_AgregarDetalle_clicked()
     } else {
         QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para agregarlo");
     }
+}
+
+
+void MainWindow::on_EMP_CB_SeleccionDato_currentIndexChanged(int index)
+{
+    if(index == 0){                             //Default
+        defaultConfig();
+    } else if (index == 3 || index == 4 || index == 15){       //ComboBox
+        ui->EMP_LAB_DatoXCB->setHidden(false);
+        ui->EMP_LAB_DatoXLE->setHidden(true);
+        ui->EMP_LE_DatoMod->setHidden(true);
+        ui->EMP_CB_TituloYCortesia->setHidden(false);
+        ui->EMP_DE_FechaNueva->setHidden(true);
+    } else if (index == 5 || index == 6){       //Date Edit
+        ui->EMP_LAB_DatoXCB->setHidden(true);
+        ui->EMP_LAB_DatoXLE->setHidden(false);
+        ui->EMP_LE_DatoMod->setHidden(true);
+        ui->EMP_CB_TituloYCortesia->setHidden(true);
+        ui->EMP_DE_FechaNueva->setHidden(false);
+    } else {                                    //Line Edits
+        ui->EMP_LAB_DatoXCB->setHidden(true);
+        ui->EMP_LAB_DatoXLE->setHidden(false);
+        ui->EMP_LE_DatoMod->setHidden(false);
+        ui->EMP_CB_TituloYCortesia->setHidden(true);
+        ui->EMP_DE_FechaNueva->setHidden(true);
+    }
+
+    switch(index){
+    case 1:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese el Apellido");
+        campo = "last_name";
+        break;
+    case 2:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese el Nombre");
+        campo = "first_name";
+        break;
+    case 3:
+        ui->EMP_LAB_DatoXCB->setText("Titulo");
+        cargarTituloEmpleado();
+        campo = "title";
+        break;
+    case 4:
+        ui->EMP_LAB_DatoXCB->setText("Titulo de Cortesia");
+        cargarTituloCorEMP();
+        campo = "title_of_courtesy";
+        break;
+    case 5:
+        ui->EMP_LAB_DatoXLE->setText("Fecha de Nacimiento");
+        campo = "birth_date";
+        break;
+    case 6:
+        ui->EMP_LAB_DatoXLE->setText("Fecha de Contratacion");
+        campo = "hire_date";
+        break;
+    case 7:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese la Direccion");
+        campo = "address";
+        break;
+    case 8:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese la Ciudad");
+        campo = "city";
+        break;
+    case 9:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese la Region");
+        campo = "region";
+        break;
+    case 10:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese el Codigo Postal");
+        campo = "postal_code";
+        break;
+    case 11:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese el Pais");
+        campo = "country";
+        break;
+    case 12:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese el Telefono Fijo");
+        campo = "home_phone";
+        break;
+    case 13:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese la Extension");
+        campo = "extension";
+        break;
+    case 14:
+        ui->EMP_LAB_DatoXLE->setText("Ingrese la Nota");
+        campo = "notes";
+        break;
+    case 15:
+        cargarEmpleados();
+        ui->EMP_LAB_DatoXCB->setText("Se Reporta a");
+        campo = "reports_to";
+        break;
+    }
+}
+
+QString MainWindow::shortcutParaManager(){
+    QString nombreManager = ui->EMP_CB_TituloYCortesia->currentText();
+    QStringList nombreManagerSeparado = nombreManager.split(' ');
+
+    //Obtiene el manager del empleado
+    QSqlQuery queryEmpleado;
+    queryEmpleado.prepare("SELECT employee_id FROM employees WHERE first_name = ? AND last_name = ?");
+    queryEmpleado.addBindValue(nombreManagerSeparado.first());
+    queryEmpleado.addBindValue(nombreManagerSeparado.last());
+    if(queryEmpleado.exec() && queryEmpleado.next()) {
+        return queryEmpleado.value(0).toString();
+    }
+    return 0;
 }
 

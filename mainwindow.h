@@ -26,7 +26,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "12345"
+#define PASSWORD "Honduras1286"
 #define DATABASE_NAME "northwind"
 
 
@@ -55,14 +55,14 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_PB_CrearEmpleado_clicked();
     void on_pushButton_clicked();
-    void on_pushButton_3_clicked();
-    void on_pushButton_2_clicked();
+    void on_EMP_PB_ActualizarEstaShit_clicked();
     void on_PB_EliminarDetalle_clicked();
     void on_LE_BuscarProducto_textChanged(const QString &arg1);
     void on_CL_PB_CrearCliente_clicked();
     void on_CL_CB_CamposAModificar_currentIndexChanged(int);
     void on_CL_PB_Actualizat_clicked();
     void on_PB_AgregarDetalle_clicked();
+    void on_EMP_CB_SeleccionDato_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -74,15 +74,21 @@ private:
 
     QString dato = "";
 
+    QString id = "";
+
     int orderID_flag;
     int generarIDOrden();
     int generarIDProducto();
     int generarIDEmpleado();
     QString generarIDCliente(QString);
+    void minorSettings(int);
+    void cargarContactos();
     void cargarClientes();
     void cargarEmpleados();
     void cargarTitulos();
     void cargarAgencias();
+    void cargarTituloEmpleado();
+    void cargarTituloCorEMP();
     void cargarProductos();
     void cargarProveedores();
     void cargarCategorias();
@@ -93,6 +99,9 @@ private:
     void descontinuarProducto(QTableWidget*, QString&);
     void variable_busqueda(QString& searchText);
     void mostrarClientes();
+
+    QString shortcutParaManager();
+    void defaultConfig();
 
 };
 #endif // MAINWINDOW_H
