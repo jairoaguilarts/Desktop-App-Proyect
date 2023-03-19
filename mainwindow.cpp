@@ -76,6 +76,7 @@ void MainWindow::cargarClientes()
             items.append(query.value(0).toString());
         }
         ui->CB_Clientes->addItems(items);
+        ui->CL_CB_IdXNombreDeContacto->addItems(items);
     }
 }
 
@@ -1008,6 +1009,8 @@ void MainWindow::on_EMP_PB_ActualizarEstaShit_clicked()
         QMessageBox::information(this, "INFO EMPLEADO", "El empleado fue Actualizado Exitosamente :D");
         ui->EMP_LE_DatoMod->clear();
     }
+    mostrarEmpleados();
+    cargarEmpleados();
 }
 
 void MainWindow::mostrarClientes(){
@@ -1086,6 +1089,8 @@ void MainWindow::on_CL_PB_CrearCliente_clicked()
         ui->CL_LE_Fax->clear();
         QMessageBox::information(this, "INFO CLIENTE", "El cliente fue creado exitosamente :D");
     }
+    mostrarClientes();
+    cargarClientes();
 }
 
 void MainWindow::on_PB_EliminarDetalle_clicked()
@@ -1199,8 +1204,9 @@ void MainWindow::on_CL_PB_Actualizat_clicked()
         QMessageBox::information(this, "INFO CLIENTE", "El cliente fue Actualizado Exitosamente :D");
         ui->CL_LE_IDCliente->clear();
         ui->CL_LE_Modificacion->clear();
-        mostrarClientes();
     }
+    mostrarClientes();
+    cargarClientes();
 }
 
 
