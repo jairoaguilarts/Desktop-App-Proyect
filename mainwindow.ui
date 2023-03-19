@@ -1091,11 +1091,11 @@
         </rect>
        </property>
       </widget>
-      <widget class="QLabel" name="label_16">
+      <widget class="QLabel" name="EMP_LAB_IDdelEmpleado">
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>50</y>
+         <y>90</y>
          <width>131</width>
          <height>20</height>
         </rect>
@@ -1108,7 +1108,30 @@
        <property name="geometry">
         <rect>
          <x>210</x>
-         <y>50</y>
+         <y>80</y>
+         <width>191</width>
+         <height>28</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="EMP_RB_SeleccionDeElemento">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>30</y>
+         <width>181</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Seleccion por Nombre</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="EMP_CB_NombresDeEmpleados">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>80</y>
          <width>191</width>
          <height>28</height>
         </rect>
@@ -1344,7 +1367,7 @@
        <property name="geometry">
         <rect>
          <x>210</x>
-         <y>100</y>
+         <y>120</y>
          <width>201</width>
          <height>28</height>
         </rect>
@@ -1404,8 +1427,8 @@
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>100</y>
-         <width>111</width>
+         <y>130</y>
+         <width>141</width>
          <height>20</height>
         </rect>
        </property>
@@ -1413,12 +1436,12 @@
         <string>Dato a Modificar</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_62">
+      <widget class="QLabel" name="CL_LAB_IdDelCliente">
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>40</y>
-         <width>91</width>
+         <y>80</y>
+         <width>131</width>
          <height>20</height>
         </rect>
        </property>
@@ -1430,7 +1453,7 @@
        <property name="geometry">
         <rect>
          <x>210</x>
-         <y>40</y>
+         <y>70</y>
          <width>201</width>
          <height>28</height>
         </rect>
@@ -1491,6 +1514,29 @@
          <x>250</x>
          <y>210</y>
          <width>161</width>
+         <height>28</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="CL_RB_SeleccionadorDeElementos">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>30</y>
+         <width>201</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Por Nombre de Contacto</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="CL_CB_IdXNombreDeContacto">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>70</y>
+         <width>201</width>
          <height>28</height>
         </rect>
        </property>

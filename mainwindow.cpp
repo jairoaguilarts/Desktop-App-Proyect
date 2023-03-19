@@ -61,6 +61,8 @@ void MainWindow::defaultConfig(){
     ui->EMP_LAB_DatoXCB->setHidden(true);
     ui->EMP_LAB_DatoXLE->setHidden(true);
     ui->EMP_LE_DatoMod->setHidden(true);
+    ui->CL_CB_IdXNombreDeContacto->setHidden(true);
+    ui->EMP_CB_NombresDeEmpleados->setHidden(true);
     ui->EMP_CB_TituloYCortesia->setHidden(true);
     ui->EMP_DE_FechaNueva->setHidden(true);
 }
@@ -83,6 +85,7 @@ void MainWindow::cargarEmpleados()
     ui->CB_Empleado->clear();
     ui->CB_Empleado_2->clear();
     ui->EMP_CB_TituloYCortesia->clear();
+    ui->EMP_CB_NombresDeEmpleados->clear();
     query.prepare("select first_name, last_name from employees ORDER BY employee_id ASC");
     if(query.exec()) {
         QStringList items;
@@ -91,6 +94,7 @@ void MainWindow::cargarEmpleados()
         }
         ui->CB_Empleado->addItems(items);
         ui->CB_Empleado_2->addItems(items);
+        ui->EMP_CB_NombresDeEmpleados->addItems(items);
         ui->EMP_CB_TituloYCortesia->addItems(items);
         //ui->CB_Empleado_3->addItems(items);
         //ui->CB_Empleado_4->addItems(items);
@@ -112,12 +116,14 @@ void MainWindow::cargarAgencias()
 
 void MainWindow::cargarContactos(){
     QSqlQuery query;
+    ui->CL_CB_IdXNombreDeContacto->clear();
     query.prepare("select distinct contact_name from customers order by contact_name asc");
     if(query.exec()) {
         QStringList items;
         while (query.next()) {
             items.append(query.value(0).toString());
         }
+        ui->CL_CB_IdXNombreDeContacto->addItems(items);
         //ui->CL_CB_ConNameID->addItems(items);
     }
 }
@@ -177,7 +183,7 @@ void MainWindow::cargarCategorias()
     }
 }
 
-void MainWindow::cargarTituloEmpleado(){
+/*void MainWindow::cargarTituloEmpleado(){
     QSqlQuery query;
     ui->EMP_CB_TituloYCortesia->clear();
     query.prepare("SELECT DISTINCT title FROM employees ORDER BY title ASC");
@@ -188,7 +194,7 @@ void MainWindow::cargarTituloEmpleado(){
         }
         ui->EMP_CB_TituloYCortesia->addItems(items);
     }
-}
+}*/
 
 void MainWindow::cargarTituloCorEMP(){
     QSqlQuery query;
@@ -963,17 +969,25 @@ void MainWindow::on_EMP_PB_ActualizarEstaShit_clicked()
 {
     QDate Fecha;
     QSqlQuery query;
-    QString id = ui->EMP_LE_IdEmpleado->text();
+    QString id;
+    //Metodo de Seleccion de dato
+    if(seleccion_empleado)           //por nombre
+        id = shortcutParaManager(ui->EMP_CB_NombresDeEmpleados->currentText());
+    else                             //por id
+        id = ui->EMP_LE_IdEmpleado->text();
 
-    if(ui->EMP_CB_SeleccionDato->currentIndex() == 3 || ui->EMP_CB_SeleccionDato->currentIndex() == 4)
+
+    //Asignacion del dato a modificar
+    if(ui->EMP_CB_SeleccionDato->currentIndex() == 4)
         dato = ui->EMP_CB_TituloYCortesia->currentText();
     else if(ui->EMP_CB_SeleccionDato->currentIndex() == 5 || ui->EMP_CB_SeleccionDato->currentIndex() == 6)
         Fecha = ui->EMP_DE_FechaNueva->date();
     else if(ui->EMP_CB_SeleccionDato->currentIndex() == 15)
-        dato = shortcutParaManager();
+        dato = shortcutParaManager(ui->EMP_CB_TituloYCortesia->currentText());
     else
         dato = ui->EMP_LE_DatoMod->text();
 
+    //Query
     QString queryString = "";
     if(ui->EMP_CB_SeleccionDato->currentIndex() == 5 || ui->EMP_CB_SeleccionDato->currentIndex() == 6){
         queryString = QString("UPDATE employees SET %1 = '%2' WHERE employee_id = %3")
@@ -1160,12 +1174,18 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
 void MainWindow::on_CL_PB_Actualizat_clicked()
 {
     QSqlQuery query;
-    QString id = ui->CL_LE_IDCliente->text();
+    QString id;
+
+    if(seleccion_cliente){
+        id = getIDFromContactName(ui->CL_CB_IdXNombreDeContacto->currentText());
+    } else
+        id = ui->CL_LE_IDCliente->text();
 
     if(ui->CL_CB_CamposAModificar->currentIndex() == 3)
         this->dato = ui->CL_CB_TitContacto2->currentText();
     else
         this->dato = ui->CL_LE_Modificacion->text();
+
 
     QString queryString = QString("UPDATE customers SET %1= '%2' WHERE customer_id = '%3'")
             .arg(campo)
@@ -1334,7 +1354,7 @@ void MainWindow::on_EMP_CB_SeleccionDato_currentIndexChanged(int index)
 {
     if(index == 0){                             //Default
         defaultConfig();
-    } else if (index == 3 || index == 4 || index == 15){       //ComboBox
+    } else if (index == 4 || index == 15){       //ComboBox
         ui->EMP_LAB_DatoXCB->setHidden(false);
         ui->EMP_LAB_DatoXLE->setHidden(true);
         ui->EMP_LE_DatoMod->setHidden(true);
@@ -1364,8 +1384,8 @@ void MainWindow::on_EMP_CB_SeleccionDato_currentIndexChanged(int index)
         campo = "first_name";
         break;
     case 3:
-        ui->EMP_LAB_DatoXCB->setText("Titulo");
-        cargarTituloEmpleado();
+        ui->EMP_LAB_DatoXLE->setText("Titulo de Empleado");
+        //cargarTituloEmpleado();
         campo = "title";
         break;
     case 4:
@@ -1421,8 +1441,7 @@ void MainWindow::on_EMP_CB_SeleccionDato_currentIndexChanged(int index)
     }
 }
 
-QString MainWindow::shortcutParaManager(){
-    QString nombreManager = ui->EMP_CB_TituloYCortesia->currentText();
+QString MainWindow::shortcutParaManager(QString nombreManager){
     QStringList nombreManagerSeparado = nombreManager.split(' ');
 
     //Obtiene el manager del empleado
@@ -1432,6 +1451,51 @@ QString MainWindow::shortcutParaManager(){
     queryEmpleado.addBindValue(nombreManagerSeparado.last());
     if(queryEmpleado.exec() && queryEmpleado.next()) {
         return queryEmpleado.value(0).toString();
+    }
+    return 0;
+}
+
+
+
+void MainWindow::on_EMP_RB_SeleccionDeElemento_toggled(bool checked)
+{
+    if(checked){
+        seleccion_empleado = true;
+        ui->EMP_LAB_IDdelEmpleado->setText("Nombre del empleado");
+        ui->EMP_CB_NombresDeEmpleados->setHidden(false);
+        ui->EMP_LE_IdEmpleado->setHidden(true);
+    }
+    else{
+        seleccion_empleado = false;
+        ui->EMP_LAB_IDdelEmpleado->setText("Ingrese el ID");
+        ui->EMP_CB_NombresDeEmpleados->setHidden(true);
+        ui->EMP_LE_IdEmpleado->setHidden(false);
+    }
+}
+
+
+void MainWindow::on_CL_RB_SeleccionadorDeElementos_toggled(bool checked)
+{
+    if(checked){
+        seleccion_cliente = 1;
+        ui->CL_LAB_IdDelCliente->setText("Nombre de Contacto");
+        cargarContactos();
+        ui->CL_CB_IdXNombreDeContacto->setHidden(false);
+        ui->CL_LE_IDCliente->setHidden(true);
+    } else {
+        seleccion_cliente = 0;
+        ui->CL_LAB_IdDelCliente->setText("ID de Cliente");
+        ui->CL_CB_IdXNombreDeContacto->setHidden(true);
+        ui->CL_LE_IDCliente->setHidden(false);
+    }
+}
+
+QString MainWindow::getIDFromContactName(QString contacto){
+    QSqlQuery query;
+    query.prepare("SELECT customer_id FROM customers WHERE contact_name = ?");
+    query.addBindValue(contacto);
+    if(query.exec() && query.next()) {
+        return query.value(0).toString();
     }
     return 0;
 }

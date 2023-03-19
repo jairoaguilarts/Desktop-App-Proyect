@@ -26,7 +26,7 @@
 //Cambiar
 #define HOST_NAME "localhost"
 #define USER_NAME "postgres"
-#define PASSWORD "12345"
+#define PASSWORD "123"
 #define DATABASE_NAME "northwind"
 
 
@@ -64,6 +64,11 @@ private slots:
     void on_PB_AgregarDetalle_clicked();
     void on_EMP_CB_SeleccionDato_currentIndexChanged(int index);
 
+
+    void on_EMP_RB_SeleccionDeElemento_toggled(bool checked);
+
+    void on_CL_RB_SeleccionadorDeElementos_toggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;
@@ -76,6 +81,10 @@ private:
 
     QString id = "";
 
+    bool seleccion_empleado = false;
+
+    bool seleccion_cliente = false;
+
     int orderID_flag;
     int generarIDOrden();
     int generarIDProducto();
@@ -87,7 +96,7 @@ private:
     void cargarEmpleados();
     void cargarTitulos();
     void cargarAgencias();
-    void cargarTituloEmpleado();
+    //void cargarTituloEmpleado();
     void cargarTituloCorEMP();
     void cargarProductos();
     void cargarProveedores();
@@ -100,7 +109,8 @@ private:
     void variable_busqueda(QString& searchText);
     void mostrarClientes();
 
-    QString shortcutParaManager();
+    QString getIDFromContactName(QString);
+    QString shortcutParaManager(QString);
     void defaultConfig();
 
 };
