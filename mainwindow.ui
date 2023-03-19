@@ -27,7 +27,7 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -1566,6 +1566,76 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Devoluciones</string>
+     </attribute>
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>781</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Ordenes</string>
+      </property>
+      <widget class="QComboBox" name="CB_Ordenes">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>40</y>
+         <width>251</width>
+         <height>25</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_17">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>781</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Detalles de Orden</string>
+      </property>
+      <widget class="QPushButton" name="PB_Devolver">
+       <property name="geometry">
+        <rect>
+         <x>322</x>
+         <y>500</y>
+         <width>141</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Devolver Producto</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="TB_DetallesOrden">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>751</width>
+         <height>461</height>
+        </rect>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+      </widget>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1574,7 +1644,7 @@
      <x>0</x>
      <y>0</y>
      <width>878</width>
-     <height>22</height>
+     <height>32</height>
     </rect>
    </property>
   </widget>

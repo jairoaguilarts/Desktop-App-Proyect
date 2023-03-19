@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     cargarCategorias();
     cargarTitulos();
     mostrarClientes();
+    cargarOrdenes();
     ui->CB_Descontinuado->addItem("Si");
     ui->CB_Descontinuado->addItem("No");
     ui->DE_fechaContratado->setDate(QDate::currentDate());
@@ -196,6 +197,19 @@ void MainWindow::cargarCategorias()
         ui->EMP_CB_TituloYCortesia->addItems(items);
     }
 }*/
+
+void MainWindow::cargarOrdenes(){
+    QSqlQuery query;
+    ui->CB_Ordenes->clear();
+    query.prepare("SELECT DISTINCT order_id FROM orders ORDER BY order_id ASC");
+    if(query.exec()){
+        QStringList items;
+        while(query.next()){
+            items.append(query.value(0).toString());
+        }
+        ui->CB_Ordenes->addItems(items);
+    }
+}
 
 void MainWindow::cargarTituloCorEMP(){
     QSqlQuery query;
@@ -1504,5 +1518,68 @@ QString MainWindow::getIDFromContactName(QString contacto){
         return query.value(0).toString();
     }
     return 0;
+}
+
+int MainWindow::mostrarDetallesOrden(QString id_orden){
+    QSqlQuery query;
+    query.prepare("SELECT * From Order_Details where order_id = ?");
+    query.addBindValue(id_orden);
+    ui->TB_DetallesOrden->clear();
+    ui->TB_DetallesOrden->setRowCount(0);
+    ui->TB_DetallesOrden->setColumnCount(5);
+    ui->TB_DetallesOrden->setHorizontalHeaderLabels({"ID Orden", "ID Producto", "Precio Unidad", "Cantidad", "Descuento"});
+    int row = -1;
+    query.exec();
+    while (query.next()) {
+        row++;
+        ui->TB_DetallesOrden->insertRow(row);
+        ui->TB_DetallesOrden->setItem(row, 0, new QTableWidgetItem(QString::number(query.value(0).toInt())));
+        ui->TB_DetallesOrden->setItem(row, 1, new QTableWidgetItem(QString::number(query.value(1).toInt())));
+        ui->TB_DetallesOrden->setItem(row, 2, new QTableWidgetItem(QString::number(query.value(2).toFloat())));
+        ui->TB_DetallesOrden->setItem(row, 3, new QTableWidgetItem(QString::number(query.value(3).toInt())));
+        ui->TB_DetallesOrden->setItem(row, 4, new QTableWidgetItem(QString::number(query.value(4).toFloat())));
+    }
+    ui->TB_DetallesOrden->resizeColumnsToContents();
+    ui->TB_DetallesOrden->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    return row;
+}
+
+void MainWindow::on_CB_Ordenes_currentIndexChanged(int index)
+{
+    mostrarDetallesOrden(ui->CB_Ordenes->currentText());
+}
+
+
+void MainWindow::on_PB_Devolver_clicked()
+{
+    int row = ui->TB_DetallesOrden->currentRow();
+    if(row != -1){
+        QString id_order = ui->TB_DetallesOrden->item(row, 0)->text();
+        QString id_prod = ui->TB_DetallesOrden->item(row, 1)->text();
+        QString total = ui->TB_DetallesOrden->item(row, 3)->text();
+
+        QSqlQuery query;
+        query.prepare("UPDATE products SET units_in_stock = (SELECT units_in_stock FROM products WHERE product_id = :idprod) + :total WHERE product_id = :idprod2");
+        query.bindValue(":idprod",id_prod);
+        query.bindValue(":total",total);
+        query.bindValue(":idprod2",id_prod);
+        if(!query.exec()){
+            qDebug() << "Error: " << query.lastError().text();
+        }
+        QSqlQuery query2;
+        query2.prepare("DELETE FROM order_details WHERE order_id = ? AND product_id = ?");
+        query2.addBindValue(id_order);
+        query2.addBindValue(id_prod);
+        query2.exec();
+        if(mostrarDetallesOrden(ui->CB_Ordenes->currentText())==-1){
+            QSqlQuery query3;
+            query3.prepare("DELETE FROM orders WHERE order_id = ?");
+            query3.addBindValue(id_order);
+            query3.exec();
+            cargarOrdenes();
+            QMessageBox::information(this, "ORDEN", "SE HA ELIMINADO LA ORDEN");
+        }
+
+    }
 }
 
