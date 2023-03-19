@@ -1211,41 +1211,43 @@ void MainWindow::variable_busqueda(QString& searchText)
 
 void MainWindow::on_LE_BuscarProducto_textChanged(const QString &searchText)
 {
-      ui->TV_BuscarProductos->resizeColumnsToContents();
-      ui->TV_BuscarProductos->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->TV_BuscarProductos->resizeColumnsToContents();
+    ui->TV_BuscarProductos->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
     // Crear el modelo de tabla y vincularlo al QTableView
-      QStandardItemModel *model = new QStandardItemModel(this);
-      model->setColumnCount(2);
-      model->setHeaderData(0, Qt::Horizontal, tr("Product ID"));
-      model->setHeaderData(1, Qt::Horizontal, tr("Product Name"));
-      ui->TV_BuscarProductos->setModel(model);
+    QStandardItemModel *model = new QStandardItemModel(this);
+    model->setColumnCount(2);
+    model->setHeaderData(0, Qt::Horizontal, tr("Product ID"));
+    model->setHeaderData(1, Qt::Horizontal, tr("Product Name"));
+    ui->TV_BuscarProductos->setModel(model);
 
-      // Ejecutar la consulta SQL para buscar los productos
-      QSqlQuery query(database);
-      if (searchText.isEmpty()) {
-          query.prepare("SELECT product_id, product_name FROM products");
-      } else {
-          query.prepare("SELECT product_id, product_name FROM products WHERE product_name ILIKE ?");
-          query.bindValue(0, "%" + searchText + "%");
-      }
-      if (!query.exec()) {
-          QMessageBox::critical(this, tr("Error"), tr("Could not execute query."));
-          return;
-      }
+    // Ejecutar la consulta SQL para buscar los productos
+    QSqlQuery query(database);
+    if (searchText.isEmpty()) {
+        query.prepare("SELECT product_id, product_name FROM products ORDER BY product_id");
+    } else {
+        query.prepare("SELECT product_id, product_name FROM products WHERE product_name ILIKE ? ORDER BY product_id");
+        query.bindValue(0, "%" + searchText + "%");
+    }
+    if (!query.exec()) {
+        QMessageBox::critical(this, tr("Error"), tr("Could not execute query."));
+        return;
+    }
 
-      // Limpiar el modelo de tabla antes de agregar los nuevos resultados
-      model->removeRows(0, model->rowCount());
+    // Limpiar el modelo de tabla antes de agregar los nuevos resultados
+    model->removeRows(0, model->rowCount());
 
-      // Agregar los resultados al modelo de tabla
-      int row = 0;
-      while (query.next()) {
-          int id = query.value(0).toInt();
-          QString name = query.value(1).toString();
-          model->setItem(row, 0, new QStandardItem(QString::number(id)));
-          model->setItem(row, 1, new QStandardItem(name));
-          row++;
-      }
+    // Agregar los resultados al modelo de tabla
+    int row = 0;
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        model->setItem(row, 0, new QStandardItem(QString::number(id)));
+        model->setItem(row, 1, new QStandardItem(name));
+        row++;
+    }
 }
+
 
 
 void MainWindow::on_PB_AgregarDetalle_clicked()
