@@ -73,6 +73,8 @@ private slots:
 
     void on_PB_Devolver_clicked();
 
+    void on_PB_devolver_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase database;

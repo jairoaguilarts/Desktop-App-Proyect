@@ -3,18 +3,12 @@
 #include <iostream>
 #include <QStandardItemModel>
 
-
 using namespace std;
 
 void asignaciones_constantes_fechas();
 void generacion_idOrden();
-//void buscar_productos_por_nombre( QString& , QTableWidget* );
 
-
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow){
 
     //Conexion a PSQL
     database = QSqlDatabase::addDatabase("QPSQL");
@@ -48,12 +42,11 @@ MainWindow::MainWindow(QWidget *parent)
     //Cosas ocultas para fines esteticos
     ui->CL_CB_TitContacto2->setHidden(true);
     ui->CL_TL_ModTitulo->setHidden(true);
+    ui->PB_devolver->setHidden(true);
     on_LE_BuscarProducto_textChanged("");
-
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     database.close();
     delete ui;
 }
@@ -67,8 +60,8 @@ void MainWindow::defaultConfig(){
     ui->EMP_CB_TituloYCortesia->setHidden(true);
     ui->EMP_DE_FechaNueva->setHidden(true);
 }
-void MainWindow::cargarClientes()
-{
+
+void MainWindow::cargarClientes(){
     QSqlQuery query;
     query.prepare("select contact_name from customers ORDER BY customer_id ASC");
     if(query.exec()){
@@ -81,8 +74,7 @@ void MainWindow::cargarClientes()
     }
 }
 
-void MainWindow::cargarEmpleados()
-{
+void MainWindow::cargarEmpleados(){
     QSqlQuery query;
     ui->CB_Empleado->clear();
     ui->CB_Empleado_2->clear();
@@ -98,13 +90,10 @@ void MainWindow::cargarEmpleados()
         ui->CB_Empleado_2->addItems(items);
         ui->EMP_CB_NombresDeEmpleados->addItems(items);
         ui->EMP_CB_TituloYCortesia->addItems(items);
-        //ui->CB_Empleado_3->addItems(items);
-        //ui->CB_Empleado_4->addItems(items);
     }
 }
 
-void MainWindow::cargarAgencias()
-{
+void MainWindow::cargarAgencias(){
     QSqlQuery query;
     query.prepare("select company_name from shippers");
     if(query.exec()) {
@@ -126,7 +115,6 @@ void MainWindow::cargarContactos(){
             items.append(query.value(0).toString());
         }
         ui->CL_CB_IdXNombreDeContacto->addItems(items);
-        //ui->CL_CB_ConNameID->addItems(items);
     }
 }
 
@@ -145,8 +133,7 @@ void MainWindow::cargarTitulos(){
     }
 }
 
-void MainWindow::cargarProductos()
-{
+void MainWindow::cargarProductos(){
     QSqlQuery query;
     query.prepare("select product_name from products ORDER BY product_id ASC");
     if(query.exec()) {
@@ -159,8 +146,7 @@ void MainWindow::cargarProductos()
     }
 }
 
-void MainWindow::cargarProveedores()
-{
+void MainWindow::cargarProveedores(){
     QSqlQuery query;
     query.prepare("select company_name from suppliers");
     if(query.exec()) {
@@ -172,8 +158,7 @@ void MainWindow::cargarProveedores()
     }
 }
 
-void MainWindow::cargarCategorias()
-{
+void MainWindow::cargarCategorias(){
     QSqlQuery query;
     query.prepare("select category_name from categories ORDER BY category_id ASC");
     if(query.exec()) {
@@ -184,19 +169,6 @@ void MainWindow::cargarCategorias()
         ui->CB_Categoria->addItems(items);
     }
 }
-
-/*void MainWindow::cargarTituloEmpleado(){
-    QSqlQuery query;
-    ui->EMP_CB_TituloYCortesia->clear();
-    query.prepare("SELECT DISTINCT title FROM employees ORDER BY title ASC");
-    if(query.exec()) {
-        QStringList items;
-        while (query.next()) {
-            items.append(query.value(0).toString());
-        }
-        ui->EMP_CB_TituloYCortesia->addItems(items);
-    }
-}*/
 
 void MainWindow::cargarOrdenes(){
     QSqlQuery query;
@@ -224,8 +196,7 @@ void MainWindow::cargarTituloCorEMP(){
     }
 }
 
-void MainWindow::on_PB_CrearOrden_clicked()
-{
+void MainWindow::on_PB_CrearOrden_clicked(){
     int ordenID = this->generarIDOrden();
 
     QString nombreCliente = ui->CB_Clientes->currentText();
@@ -295,11 +266,6 @@ void MainWindow::on_PB_CrearOrden_clicked()
         qDebug() << "Error: " << query.lastError().text();
     } else {
         orderID_flag = ordenID;
-        //Instancia de una orden
-        /*Order *order = new Order(ordenID, idCliente.toStdString(), idEmpleado.toStdString(), (fechaOrden.toString()).toStdString(), (fechaRequerida.toString()).toStdString(),
-                                 idAgencia.toInt(), peso.toDouble(),nombreBarco.toStdString(), direccionEnvio.toStdString(), ciudad.toStdString(), region.toStdString(),
-                                 codigoPostal.toStdString(), pais.toStdString());*/
-        //Limpia los campos de los Line Edits
         ui->LE_Peso->clear();
         ui->LE_NombreBarco->clear();
         ui->LE_DireccionEnvio->clear();
@@ -308,11 +274,9 @@ void MainWindow::on_PB_CrearOrden_clicked()
         ui->LE_CodigoPostal->clear();
         ui->LE_Pais->clear();
     }
-
 }
 
-int MainWindow::generarIDOrden()
-{
+int MainWindow::generarIDOrden(){
     QSqlQuery query(this->database);
     query.prepare("SELECT MAX(order_id) FROM orders");
     query.exec();
@@ -321,8 +285,7 @@ int MainWindow::generarIDOrden()
     return orderID + 1;
 }
 
-void MainWindow::actualizarTabla()
-{
+void MainWindow::actualizarTabla(){
     QSqlQueryModel *queryModel = new QSqlQueryModel();
     queryModel->setQuery(QString("SELECT products.product_id, product_name, products.unit_price, quantity, discount FROM order_details INNER JOIN products ON order_details.product_id = products.product_id WHERE order_details.order_id = %1").arg(orderID_flag));
     ui->TV_detalles->setModel(queryModel);
@@ -330,86 +293,7 @@ void MainWindow::actualizarTabla()
     ui->TV_detalles->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-/*void MainWindow::on_PB_agregardetalles_clicked()
-{
-    QString nombreProducto = ui->CB_Productos->currentText();
-    QString idProducto;
-    //Obtiene el produc_id de products
-    QSqlQuery queryProducto;
-    queryProducto.prepare("SELECT product_id FROM products WHERE product_name = ?");
-    queryProducto.addBindValue(nombreProducto);
-    if(queryProducto.exec() && queryProducto.next()){
-        idProducto = queryProducto.value(0).toString();
-    }
-
-    QString unitPrice;
-    QSqlQuery query1;
-    if (query1.exec(QString("SELECT unit_price FROM products WHERE product_id = '%1'").arg(idProducto)) && query1.next()) {
-        unitPrice = query1.value(0).toString();
-    } else {
-        unitPrice = "";
-    }
-
-    //Obtiene los datos de los Line Edits
-    QString cantidad = ui->LE_cantidad->text();
-    QString descuento = ui->LE_descuento->text();
-    QSqlQuery querycant;
-    int cant;
-    if(querycant.exec(QString("SELECT units_in_stock FROM products WHERE product_id = '%1'").arg(idProducto)) && querycant.next()){
-        cant = querycant.value(0).toInt();
-    }
-    else{
-        cant = 0;
-    }
-    if(cantidad.toInt() <= cant){
-        // Verifica que la orden exista en la tabla orders
-        QSqlQuery query2;
-        if (query2.exec(QString("SELECT order_id FROM orders WHERE order_id = '%1'").arg(orderID_flag)) && query2.next()) {
-            //Inserta los datos a order_details
-            QString queryString = "INSERT INTO order_details (order_id, product_id, unit_price, quantity, discount) VALUES (:orderID,:productID,:unitPrice,:quantity,:discount)";
-            QSqlQuery query3;
-            query3.prepare(queryString);
-            query3.bindValue(":orderID", orderID_flag);
-            query3.bindValue(":productID", idProducto.toInt());
-            query3.bindValue(":unitPrice", unitPrice.toDouble());
-            query3.bindValue(":quantity", cantidad.toInt());
-            query3.bindValue(":discount", descuento.toDouble());
-
-            if(!query3.exec()){
-                QMessageBox::information(this, "INFO ORDEN", "La orden no pudo ser procesada correctamente");
-                qDebug() << "Error: " << query3.lastError().text();
-            }
-            else{
-                //Instancia de un detalle de orden
-                /*OrderDetails *orderDetail = new OrderDetails(orderID_flag, idProducto.toInt(), unitPrice.toDouble(), cantidad.toInt(),
-                                                             descuento.toDouble());
-                //ACTUALIZA CANT PRODUCTOS
-                int newCant = cant - cantidad.toInt();
-                QString str = "UPDATE products SET units_in_stock = :newCant WHERE product_id = :productID";
-                QSqlQuery queryprod;
-                queryprod.prepare(str);
-                queryprod.bindValue(":newCant", newCant);
-                queryprod.bindValue(":productID", idProducto);
-                if(queryprod.exec()){
-                    QMessageBox::information(this, "PRODUCTOS", "Se actualizo la cantidad de productos");
-                }
-                //Limpia los campos de los Line Edits
-                ui->LE_cantidad->clear();
-                ui->LE_descuento->clear();
-            }
-        } else {
-            QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
-            qDebug() << "Error: " << query2.lastError().text();
-        }
-    }
-    else{
-        QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
-    }
-    actualizarTabla();
-}*/
-
-void MainWindow::on_emitirorden_clicked()
-{
+void MainWindow::on_emitirorden_clicked(){
     // Mostrar un diálogo de selección de archivo para que el usuario pueda seleccionar la ubicación y el nombre del archivo
     QString filename = QFileDialog::getSaveFileName(this, tr("Guardar archivo PDF"), QString(), tr("PDF files (*.pdf)"));
     if (filename.isEmpty()) {
@@ -588,6 +472,8 @@ void MainWindow::on_emitirorden_clicked()
 
     // Mostrar un mensaje de confirmación al usuario
     QMessageBox::information(this, "Documento PDF creado", "El documento PDF se ha creado correctamente.");
+
+    ui->PB_devolver->setHidden(false);
 }
 
 int MainWindow::generarIDProducto(){
@@ -599,8 +485,7 @@ int MainWindow::generarIDProducto(){
     return prod_ID + 1;
 }
 
-void MainWindow::on_PB_CrearProducto_clicked()
-{
+void MainWindow::on_PB_CrearProducto_clicked(){
     int id = this->generarIDProducto();
 
     QString suppName = ui->CB_Proveedor->currentText();
@@ -674,8 +559,7 @@ void MainWindow::on_PB_CrearProducto_clicked()
 }
 
 
-void MainWindow::on_PB_ActualizarProducto_clicked()
-{
+void MainWindow::on_PB_ActualizarProducto_clicked(){
     QString nombreProducto = ui->CB_Productos_2->currentText();
     QString id;
     //Obtiene el product_id de products
@@ -785,8 +669,7 @@ void MainWindow::descontinuarProducto(QTableWidget* resultados, QString& id_prod
     mostrarProductos(resultados);
 }
 
-void MainWindow::on_PB_Descontinuar_clicked()
-{
+void MainWindow::on_PB_Descontinuar_clicked(){
     QString nombreProducto = ui->CB_Productos_3->currentText();
     QString id;
     //Obtiene el product_id de products
@@ -1579,7 +1462,50 @@ void MainWindow::on_PB_Devolver_clicked()
             cargarOrdenes();
             QMessageBox::information(this, "ORDEN", "SE HA ELIMINADO LA ORDEN");
         }
+    }
+}
 
+
+void MainWindow::on_PB_devolver_clicked()
+{
+    //Obtener el modelo de la tabla
+    QAbstractItemModel *modelo = ui->TV_detalles->model();
+    QModelIndexList indicesSeleccionados = ui->TV_detalles->selectionModel()->selectedIndexes();
+
+    if (!indicesSeleccionados.isEmpty()) {
+        QModelIndex indice = indicesSeleccionados.first();
+        QVariant datoProductID = modelo->data(modelo->index(indice.row(), 0));
+        QVariant datoQuantity = modelo->data(modelo->index(indice.row(), 3));
+        if (datoProductID.isValid() && datoQuantity.isValid()) {
+            QString product_id = datoProductID.toString();
+            QString cantidad = datoQuantity.toString();
+            QSqlQuery query;
+            query.prepare("UPDATE products SET units_in_stock = (SELECT units_in_stock FROM products WHERE product_id = :idprod) + :total WHERE product_id = :idprod2");
+            query.bindValue(":idprod",product_id);
+            query.bindValue(":total",cantidad);
+            query.bindValue(":idprod",product_id);
+            if(!query.exec()){
+                qDebug() << "Error: " << query.lastError().text();
+            }
+            QSqlQuery query2;
+            query2.prepare("DELETE FROM order_details WHERE order_id = ? AND product_id = ?");
+            query2.addBindValue(orderID_flag);
+            query2.addBindValue(product_id);
+            query2.exec();
+            QSqlQuery query3;
+            query3.prepare("SELECT * From Order_Details where order_id = ?");
+            query3.addBindValue(orderID_flag);
+            if(query3.exec() && !query3.next()) {
+                QSqlQuery query4;
+                query4.prepare("DELETE FROM orders WHERE order_id = ?");
+                query4.addBindValue(orderID_flag);
+                query4.exec();
+                QMessageBox::information(this, "ORDEN", "SE HA ELIMINADO LA ORDEN");
+            }
+        }
+        actualizarTabla();
+    } else {
+        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
     }
 }
 
