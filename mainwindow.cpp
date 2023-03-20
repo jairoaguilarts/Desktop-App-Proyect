@@ -58,6 +58,8 @@ void MainWindow::defaultConfig(){
     ui->EMP_CB_NombresDeEmpleados->setHidden(true);
     ui->EMP_CB_TituloYCortesia->setHidden(true);
     ui->EMP_DE_FechaNueva->setHidden(true);
+    ui->CL_TL_Dato_a_Modificar->setHidden(true);
+    ui->CL_LE_Modificacion->setHidden(true);
 }
 
 void MainWindow::cargarClientes(){
@@ -1005,34 +1007,50 @@ void MainWindow::on_CL_CB_CamposAModificar_currentIndexChanged(int index)
         ui->CL_TL_Dato_a_Modificar->setText("Selecciona un Dato a Modificar");
         break;
     case 1:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese Nombre de Compañia");
         this->campo = "company_name";
         break;
     case 2:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese Nombre de Contacto");
         this->campo = "contact_name";
         break;
     case 4:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Direccion");
         this->campo = "address";
         break;
     case 5:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Ciudad");
         this->campo = "city";
         break;
     case 6:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese la Region");
         this->campo = "region";
         break;
     case 7:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Codigo Postal");
         this->campo = "postal_code";
         break;
     case 8:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Telefono");
         this->campo = "phone";
         break;
     case 9:
+        ui->CL_TL_Dato_a_Modificar->setHidden(false);
+        ui->CL_LE_Modificacion->setHidden(false);
         ui->CL_TL_Dato_a_Modificar->setText("Ingrese el Fax");
         this->campo = "fax";
         break;
