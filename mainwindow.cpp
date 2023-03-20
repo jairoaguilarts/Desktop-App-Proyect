@@ -966,7 +966,7 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
             queryC.prepare("UPDATE products SET units_in_stock = (SELECT units_in_stock FROM products WHERE product_id = :idprod) + :total WHERE product_id = :idprod2");
             queryC.bindValue(":idprod",product_id.toInt());
             queryC.bindValue(":total",cantidad.toInt());
-            queryC.bindValue(":idprod",product_id.toInt());
+            queryC.bindValue(":idprod2",product_id.toInt());
             if(!queryC.exec()){
                 qDebug() << "Error: " << queryC.lastError().text();
             }
@@ -1406,7 +1406,7 @@ void MainWindow::on_PB_devolver_clicked()
             query.prepare("UPDATE products SET units_in_stock = (SELECT units_in_stock FROM products WHERE product_id = :idprod) + :total WHERE product_id = :idprod2");
             query.bindValue(":idprod",product_id);
             query.bindValue(":total",cantidad);
-            query.bindValue(":idprod",product_id);
+            query.bindValue(":idprod2",product_id);
             if(!query.exec()){
                 qDebug() << "Error: " << query.lastError().text();
             }
