@@ -856,10 +856,10 @@ void MainWindow::on_EMP_PB_ActualizarEstaShit_clicked()
     }
 
     if (!query.exec(queryString)) {
-        QMessageBox::information(this, "ERROR EMPLEADO", "El empleado no pudo ser Actualizado :(");
+        QMessageBox::information(this, "ERROR EMPLEADO", "El empleado no pudo ser Actualizado");
         qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
     } else{
-        QMessageBox::information(this, "INFO EMPLEADO", "El empleado fue Actualizado Exitosamente :D");
+        QMessageBox::information(this, "INFO EMPLEADO", "El empleado fue Actualizado Exitosamente");
         ui->EMP_LE_DatoMod->clear();
     }
     mostrarEmpleados();
@@ -927,7 +927,7 @@ void MainWindow::on_CL_PB_CrearCliente_clicked()
     query.bindValue(":fax", fax);
 
     if(!query.exec()){
-        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser creado :(");
+        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser creado");
         qDebug() << "Error: " << query.lastError().text();
     } else {
         mostrarClientes();
@@ -940,7 +940,7 @@ void MainWindow::on_CL_PB_CrearCliente_clicked()
         ui->CL_LE_Region->clear();
         ui->CL_LE_Pais->clear();
         ui->CL_LE_Fax->clear();
-        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue creado exitosamente :D");
+        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue creado exitosamente");
     }
     mostrarClientes();
     cargarClientes();
@@ -962,9 +962,9 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
             QString cantidad = datoCantidad.toString();
             QSqlQuery queryC;
             queryC.prepare("UPDATE products SET units_in_stock = (SELECT units_in_stock FROM products WHERE product_id = :idprod) + :total WHERE product_id = :idprod2");
-            queryC.bindValue(":idprod",product_id);
-            queryC.bindValue(":total",cantidad);
-            queryC.bindValue(":idprod",product_id);
+            queryC.bindValue(":idprod",product_id.toInt());
+            queryC.bindValue(":total",cantidad.toInt());
+            queryC.bindValue(":idprod",product_id.toInt());
             if(!queryC.exec()){
                 qDebug() << "Error: " << queryC.lastError().text();
             }
@@ -974,11 +974,12 @@ void MainWindow::on_PB_EliminarDetalle_clicked()
                 qDebug() << "No se pudo eliminar el registro";
             }
             actualizarTabla();
+            QTableWidget* resultados = ui->TV_Productos;
+            mostrarProductos(resultados);
         }
     } else {
         QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
     }
-    mostrarProductos(ui->TV_Productos);
 }
 
 
@@ -1062,10 +1063,10 @@ void MainWindow::on_CL_PB_Actualizat_clicked()
             .arg(id);
 
     if (!query.exec(queryString)) {
-        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser Actualizado :(");
+        QMessageBox::information(this, "ERROR CLIENTE", "El cliente no pudo ser Actualizado");
         qDebug() << "Error al ejecutar la consulta:" << query.lastError().text();
     } else{
-        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue Actualizado Exitosamente :D");
+        QMessageBox::information(this, "INFO CLIENTE", "El cliente fue Actualizado Exitosamente");
         ui->CL_LE_IDCliente->clear();
         ui->CL_LE_Modificacion->clear();
     }
@@ -1197,6 +1198,7 @@ void MainWindow::on_PB_AgregarDetalle_clicked()
                             queryprod.prepare(str);
                             queryprod.bindValue(":newCant", newCant);
                             queryprod.bindValue(":productID", product_id.toInt());
+                            queryprod.exec();
                         }
                     } else {
                         QMessageBox::information(this, "INFO ORDEN", "La orden no existe");
@@ -1207,7 +1209,8 @@ void MainWindow::on_PB_AgregarDetalle_clicked()
                     QMessageBox::information(this, "PRODUCTO", "No existe los suficientes productos");
                 }
                 actualizarTabla();
-                mostrarProductos(ui->TV_Productos);
+                QTableWidget* resultados = ui->TV_Productos;
+                mostrarProductos(resultados);
             } else if (cantidad.toInt() <= 0 || cantidad.isEmpty()){
                 QMessageBox::information(this, "INFO ORDEN", "No ingreso una cantidad valida");
             }
@@ -1407,7 +1410,7 @@ void MainWindow::on_PB_devolver_clicked()
         }
         actualizarTabla();
     } else {
-        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para eliminarlo");
+        QMessageBox::information(this, "INFO ORDEN", "Seleccione un producto para devolverlo");
     }
 }
 
