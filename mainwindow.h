@@ -69,10 +69,6 @@ private slots:
 
     void on_CL_RB_SeleccionadorDeElementos_toggled(bool checked);
 
-    void on_CB_Ordenes_currentIndexChanged(int index);
-
-    void on_PB_Devolver_clicked();
-
     void on_PB_devolver_clicked();
 
 private:
@@ -107,7 +103,6 @@ private:
     void cargarProductos();
     void cargarProveedores();
     void cargarCategorias();
-    void cargarOrdenes();
     void actualizarTabla();
     void mostrarProductos(QTableWidget*);
     void mostrarEmpleados();
